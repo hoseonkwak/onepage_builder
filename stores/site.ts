@@ -7,7 +7,8 @@ import type {
   NavItem,
   HeaderContent,
   HeroContent,
-  ChurchIntroContent
+  ChurchIntroContent,
+  WorshipInfoContent
 } from '~/types/site'
 
 // 섹션 라벨 맵
@@ -15,7 +16,7 @@ const sectionLabels: Record<SectionType, string> = {
   header: '헤더',
   hero: '히어로',
   churchIntro: '교회소개',
-  about: '소개',
+  worshipInfo: '소개',
   gallery: '갤러리',
   testimonial: '고객후기',
   pricing: '가격표',
@@ -29,7 +30,7 @@ const sectionLabels: Record<SectionType, string> = {
 // 네비게이션에 표시할 섹션
 const navSections: SectionType[] = [
   'churchIntro',
-  'about',
+  'worshipInfo',
   'gallery',
   'testimonial',
   'pricing',
@@ -42,18 +43,18 @@ const navSections: SectionType[] = [
 const getDefaultContent = (): SiteContent => ({
   templateId: 'business',
   sections: [
-    { type: 'header', enabled: true, order: 0, id: 'header' },
-    { type: 'hero', enabled: true, order: 1, id: 'hero' },
-    { type: 'churchIntro', enabled: true, order: 2, id: 'churchIntro' },
-    { type: 'about', enabled: true, order: 3, id: 'about' },
-    { type: 'gallery', enabled: false, order: 4, id: 'gallery' },
-    { type: 'testimonial', enabled: true, order: 5, id: 'testimonial' },
-    { type: 'pricing', enabled: true, order: 6, id: 'pricing' },
-    { type: 'team', enabled: false, order: 7, id: 'team' },
-    { type: 'faq', enabled: true, order: 8, id: 'faq' },
-    { type: 'cta', enabled: true, order: 9, id: 'cta' },
-    { type: 'contact', enabled: true, order: 10, id: 'contact' },
-    { type: 'footer', enabled: true, order: 11, id: 'footer' }
+    { type: 'header', enabled: true, order: 0, id: 'header', useBgColor: false, bgColor: '#ffffff' },
+    { type: 'hero', enabled: true, order: 1, id: 'hero', useBgColor: false, bgColor: '#ffffff' },
+    { type: 'churchIntro', enabled: true, order: 2, id: 'churchIntro', useBgColor: false, bgColor: '#ffffff' },
+    { type: 'worshipInfo', enabled: true, order: 3, id: 'worshipInfo', useBgColor: true, bgColor: '#f3f4f6' },
+    // { type: 'gallery', enabled: false, order: 4, id: 'gallery' },
+    // { type: 'testimonial', enabled: true, order: 5, id: 'testimonial' },
+    // { type: 'pricing', enabled: true, order: 6, id: 'pricing' },
+    // { type: 'team', enabled: false, order: 7, id: 'team' },
+    // { type: 'faq', enabled: true, order: 8, id: 'faq' },
+    // { type: 'cta', enabled: true, order: 9, id: 'cta' },
+    // { type: 'contact', enabled: true, order: 10, id: 'contact' },
+    // { type: 'footer', enabled: true, order: 11, id: 'footer' }
   ],
   header: {
     logoText: 'Brand',
@@ -83,24 +84,40 @@ const getDefaultContent = (): SiteContent => ({
   churchIntro: {
     title: '교회소개',
     subtitle: '하나님의 사랑을 나누는 공동체',
+    showDivider: true,
     items: [
       { icon: 'mdi:cross', title: '예배', description: '매주 주일 예배와 수요 예배를 드립니다' },
       { icon: 'mdi:book-open-variant', title: '말씀', description: '성경 중심의 말씀을 전합니다' },
       { icon: 'mdi:account-group', title: '교제', description: '서로 사랑하며 함께 성장합니다' }
     ],
     columns: 3,
-    style: 'cards'
+    style: 'cards',
+    iconUseTheme: true,
+    iconBgColor: '#dbeafe',
+    iconColor: '#3b82f6',
+    cardBgColor: '#f9fafb',
+    cardShadow: 'none',
+    cardShadowDir: 'bottom',
+    cardShadowX: 0,
+    cardShadowY: 4,
+    cardShadowBlur: 6,
+    cardShadowSpread: -1,
+    cardShadowColor: '#00000015'
   },
-  about: {
-    title: '우리에 대해',
-    subtitle: '신뢰할 수 있는 파트너',
-    description: '10년 이상의 경험을 바탕으로 고객의 성공을 위해 최선을 다하고 있습니다. 혁신적인 솔루션과 전문적인 서비스로 비즈니스 목표 달성을 도와드립니다.',
-    stats: [
-      { value: '100+', label: '고객사' },
-      { value: '500+', label: '프로젝트' },
-      { value: '99%', label: '만족도' }
+  worshipInfo: {
+    title: '예배안내',
+    subtitle: '은혜가 넘치는 예배가 있습니다.',
+    items: [
+      { icon: 'mdi:check-circle-outline', title: '주일 예배', description: '주일낮예배 오전 11:00\n주일오후기도회 오후 2:00' },
+      { icon: 'mdi:account-group', title: '교회학교 예배', description: '유초등부 오후 2:00\n중고등부 오후 2:00\n청년부 오후 2:00' },
+      { icon: 'mdi:calendar', title: '주일 외 예배', description: '새벽기도회 오전 5:00\n수요기도회 오후 7:30' }
     ],
-    layout: 'image-right'
+    columns: 3,
+    iconUseTheme: false,
+    iconBgColor: 'transparent',
+    iconColor: '#1f2937',
+    bgColor: '#f3f4f6',
+    showDivider: true
   },
   gallery: {
     title: '포트폴리오',
@@ -314,6 +331,12 @@ export const useSiteStore = defineStore('site', {
       this.isDirty = true
     },
 
+    // 예배안내 콘텐츠 업데이트
+    updateWorshipInfo(content: WorshipInfoContent) {
+      this.content.worshipInfo = content
+      this.isDirty = true
+    },
+
     // 섹션 콘텐츠 업데이트
     updateSectionContent<K extends keyof SiteContent>(
       sectionKey: K,
@@ -366,7 +389,7 @@ export const useSiteStore = defineStore('site', {
               header: { ...defaults.header, ...parsed.header },
               hero: { ...defaults.hero, ...parsed.hero },
               churchIntro: { ...defaults.churchIntro, ...parsed.churchIntro },
-              about: { ...defaults.about, ...parsed.about },
+              worshipInfo: { ...defaults.worshipInfo, ...parsed.worshipInfo },
               contact: { ...defaults.contact, ...parsed.contact },
               footer: { ...defaults.footer, ...parsed.footer },
               settings: { ...defaults.settings, ...parsed.settings }

@@ -139,7 +139,7 @@ const handleSubmit = () => {
 
 <style scoped>
 .contact {
-  background-color: #fff;
+  background-color: transparent;
 }
 
 .contact__header {

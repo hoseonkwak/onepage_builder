@@ -2,11 +2,13 @@
   <div class="onepage">
     <!-- Dynamic Section Rendering -->
     <template v-for="section in enabledSections" :key="section.id">
-      <component
-        :is="getSectionComponent(section.type)"
-        :id="section.id"
-        :content="getSectionContent(section.type)"
-      />
+      <div :style="section.useBgColor ? { backgroundColor: section.bgColor } : undefined">
+        <component
+          :is="getSectionComponent(section.type)"
+          :id="section.id"
+          :content="getSectionContent(section.type)"
+        />
+      </div>
     </template>
   </div>
 </template>
@@ -19,7 +21,7 @@ import type { SectionType } from '~/types/site'
 import HeaderSection from '~/components/sections/HeaderSection.vue'
 import HeroSection from '~/components/sections/HeroSection.vue'
 import ChurchIntroSection from '~/components/sections/ChurchIntroSection.vue'
-import AboutSection from '~/components/sections/AboutSection.vue'
+import WorshipInfoSection from '~/components/sections/WorshipInfoSection.vue'
 import ContactSection from '~/components/sections/ContactSection.vue'
 import FooterSection from '~/components/sections/FooterSection.vue'
 
@@ -38,7 +40,7 @@ const sectionComponents: Record<string, any> = {
   header: HeaderSection,
   hero: HeroSection,
   churchIntro: ChurchIntroSection,
-  about: AboutSection,
+  worshipInfo: WorshipInfoSection,
   contact: ContactSection,
   footer: FooterSection
   // TODO: Add more section components

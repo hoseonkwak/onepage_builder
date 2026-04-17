@@ -29,14 +29,14 @@
 | nuxt-icon 모듈 설치 및 설정 | 완료 |
 | GitHub 원격 저장소 연결 | 완료 |
 
-### 2. 스타일링 시스템 전환
+### 2. 스타일링 시스템
 
 | 항목 | 상태 |
 |------|------|
-| Tailwind CSS 제거 | 완료 |
-| 순수 CSS + CSS Custom Properties 전환 | 완료 |
-| 글로벌 CSS 변수 정의 (컬러, 반경, 그림자, 간격) | 완료 |
+| Tailwind CSS → 순수 CSS 전환 | 완료 |
+| CSS Custom Properties 디자인 시스템 | 완료 |
 | 공통 컴포넌트 스타일 (버튼, 에디터, 토글 등) | 완료 |
+| 공통 섹션 헤더 (`.section-header`, `.section-divider`) | 완료 |
 | 모든 .vue 파일 scoped CSS로 전환 | 완료 |
 
 ### 3. 메인 컬러 시스템
@@ -44,21 +44,12 @@
 | 항목 | 상태 |
 |------|------|
 | `useThemeColor` composable 구현 | 완료 |
-| HSL 기반 팔레트 자동 생성 (50~900, 10단계) | 완료 |
-| 선택한 색 = primary-500 기준으로 상대적 밝기 생성 | 완료 |
-| 어두운/채도 낮은 색 보정 (최소 채도 보장) | 완료 |
+| HSL 기반 팔레트 자동 생성 (선택 색 = 500 기준) | 완료 |
+| 어두운/채도 낮은 색 보정 | 완료 |
 | CSS 변수 실시간 업데이트 | 완료 |
 | 좌측 사이드바 컬러피커 + 팔레트 미리보기 | 완료 |
-| 에디터/프리뷰 페이지 모두 적용 | 완료 |
 
-### 4. 페이지 구조
-
-| 구분 | 경로 | 설명 |
-|------|------|------|
-| 에디터 (메인) | `/` | 템플릿 선택 → 3단 편집 레이아웃 |
-| 미리보기 | `/preview` | 완성된 원페이지 렌더링 |
-
-### 5. 에디터 UI
+### 4. 에디터 UI
 
 | 항목 | 상태 |
 |------|------|
@@ -67,26 +58,33 @@
 | 섹션 On/Off 토글 | 완료 |
 | 섹션 순서 변경 (vue-draggable-plus) | 완료 |
 | 섹션 선택 시 하이라이트 표시 | 완료 |
-| 미리보기 영역 헤더 sticky 고정 | 완료 |
+| 섹션별 배경색 설정 (프리셋 3종 + 커스텀, 헤더/히어로 제외) | 완료 |
 
-### 6. 섹션 컴포넌트
+### 5. 섹션 컴포넌트
 
-| 섹션 | 설명 | 상태 |
-|------|------|------|
-| HeaderSection | 헤더/네비게이션 (앵커 스크롤, 모바일 메뉴) | 완료 |
-| HeroSection | 히어로 (배경 이미지, 딤, 텍스트/버튼 커스텀) | 완료 |
-| ChurchIntroSection | 교회소개 (카드/아이콘/미니멀 스타일, 동적 그리드) | 완료 |
-| AboutSection | 소개 (이미지 레이아웃, 통계) | 완료 |
-| ContactSection | 연락처 (정보 + 문의 폼) | 완료 |
-| FooterSection | 푸터 (저작권, 링크, 소셜) | 완료 |
+| 섹션 | 파일명 | 설명 | 상태 |
+|------|--------|------|------|
+| 헤더 | HeaderSection.vue | 네비게이션, 모바일 메뉴, 로그인 | 완료 |
+| 히어로 | HeroSection.vue | 배경 이미지/딤, 텍스트/버튼 커스텀 | 완료 |
+| 교회소개 | ChurchIntroSection.vue | 카드/아이콘/미니멀 스타일, 그림자, 아이콘 색상 | 완료 |
+| 예배안내 | WorshipInfoSection.vue | 아이콘+텍스트 가로 배치, 구분선 | 완료 |
+| 연락처 | ContactSection.vue | 연락처 정보 + 문의 폼 | 완료 |
+| 푸터 | FooterSection.vue | 저작권, 링크, 소셜 | 완료 |
 
-### 7. 섹션 편집기
+### 6. 섹션 편집기
 
 | 편집기 | 편집 가능 항목 | 상태 |
 |--------|---------------|------|
-| HeaderEditor | 로고(텍스트/이미지), 로그인(토글/텍스트/링크), 상단 고정 | 완료 |
-| HeroEditor | 배경(파일 업로드/URL), 딤(토글/불투명도), 텍스트(제목/부제목/설명 + 흰검 선택), 버튼(테마/커스텀 색상 + 글자색 흰검), 정렬, 높이 | 완료 |
-| ChurchIntroEditor | 제목/부제목, 항목 추가/삭제/편집(아이콘/제목/설명), 컬럼 수, 스타일 | 완료 |
+| HeaderEditor | 로고, 로그인, 상단 고정 | 완료 |
+| HeroEditor | 배경(파일/URL), 딤(토글/불투명도), 텍스트(흰/검), 버튼(테마/커스텀 + 글자색), 정렬, 높이 | 완료 |
+| ChurchIntroEditor | 제목/부제목/구분선, 레이아웃(컬럼/스타일), 카드 배경색, 카드 그림자(프리셋+방향+커스텀), 아이콘 색상(테마/커스텀), 항목 관리(IconPicker) | 완료 |
+| WorshipInfoEditor | 제목/부제목/구분선, 컬럼 수, 배경색, 아이콘 색상(테마/커스텀), 항목 관리(IconPicker) | 완료 |
+
+### 7. 공통 컴포넌트
+
+| 컴포넌트 | 설명 | 상태 |
+|----------|------|------|
+| IconPicker | 아이콘 선택 UI (카테고리별 분류, 검색, 100+개 아이콘) | 완료 |
 
 ### 8. 데이터 관리
 
@@ -117,14 +115,16 @@ onepage_builder/
 │   │   ├── HeaderSection.vue
 │   │   ├── HeroSection.vue
 │   │   ├── ChurchIntroSection.vue
-│   │   ├── AboutSection.vue
+│   │   ├── WorshipInfoSection.vue
 │   │   ├── ContactSection.vue
 │   │   └── FooterSection.vue
 │   │
 │   └── editors/
 │       ├── HeaderEditor.vue
 │       ├── HeroEditor.vue
-│       └── ChurchIntroEditor.vue
+│       ├── ChurchIntroEditor.vue
+│       ├── WorshipInfoEditor.vue
+│       └── IconPicker.vue        # 아이콘 선택 공통 컴포넌트
 │
 ├── composables/
 │   └── useThemeColor.ts          # 테마 컬러 팔레트 생성
@@ -154,11 +154,10 @@ onepage_builder/
 
 ## 남은 작업 (TODO)
 
-### Phase 1: 나머지 편집기 완성
+### Phase 1: 나머지 편집기
 
 | 항목 | 상태 |
 |------|------|
-| AboutSection 편집기 | 미완료 |
 | ContactSection 편집기 | 미완료 |
 | FooterSection 편집기 | 미완료 |
 | 저장 버튼 기능 연결 | 미완료 |
@@ -198,16 +197,13 @@ onepage_builder/
 | 날짜 | 내용 |
 |------|------|
 | 2025-01-16 | 프로젝트 초기 설정, 에디터 페이지 구현 |
-| 2025-01-16 | 미리보기 기능, 헤더 미리보기 모드 |
 | 2025-01-21 | HeaderEditor, HeroEditor 구현 |
-| 2025-01-21 | 미리보기 헤더 sticky, localStorage 마이그레이션 |
 | 2026-04-16 | Tailwind CSS → 순수 CSS 전환 |
 | 2026-04-16 | 메인 컬러 시스템 (useThemeColor, 동적 팔레트) |
-| 2026-04-16 | 히어로 배경 이미지 파일 업로드 |
-| 2026-04-16 | 히어로 딤 처리 (토글 + 불투명도) |
-| 2026-04-16 | 히어로 텍스트 색상 (흰/검 선택) |
-| 2026-04-16 | 히어로 버튼 테마컬러/직접선택 모드 |
-| 2026-04-16 | 히어로 버튼 글자색 흰/검 선택 |
-| 2026-04-16 | ChurchIntroEditor 구현 |
-| 2026-04-16 | preview.vue FeaturesSection → ChurchIntroSection 수정 |
-| 2026-04-16 | GitHub 원격 저장소 연결 |
+| 2026-04-16 | 히어로: 배경 업로드, 딤, 텍스트색, 버튼 테마/커스텀 + 글자색 |
+| 2026-04-16 | ChurchIntroEditor (아이콘색, 카드배경, 그림자 프리셋+방향+커스텀) |
+| 2026-04-16 | IconPicker 공통 컴포넌트 (카테고리별 100+개 아이콘) |
+| 2026-04-16 | about → worshipInfo 리네이밍 |
+| 2026-04-16 | WorshipInfoSection + WorshipInfoEditor 구현 (예배안내) |
+| 2026-04-16 | 공통 섹션 헤더/구분선 (section-header, section-divider) |
+| 2026-04-16 | 섹션별 배경색 설정 (프리셋 3종 + 커스텀, 헤더/히어로 제외) |

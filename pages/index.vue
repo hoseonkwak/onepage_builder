@@ -116,20 +116,66 @@
               <div
                 v-for="section in sectionList"
                 :key="section.type"
-                class="section-item"
-                :class="{ active: selectedSection === section.type }"
-                @click="selectSection(section.type)"
+                class="section-item-wrap"
               >
-                <Icon name="mdi:drag" class="drag-handle icon-16" />
-                <input
-                  type="checkbox"
-                  :checked="section.enabled"
-                  @click.stop="toggleSection(section.type)"
-                  class="section-checkbox"
-                />
-                <span class="section-item__label">
-                  {{ getSectionLabel(section.type) }}
-                </span>
+                <div
+                  class="section-item"
+                  :class="{ active: selectedSection === section.type }"
+                  @click="selectSection(section.type)"
+                >
+                  <Icon name="mdi:drag" class="drag-handle icon-16" />
+                  <input
+                    type="checkbox"
+                    :checked="section.enabled"
+                    @click.stop="toggleSection(section.type)"
+                    class="section-checkbox"
+                  />
+                  <span class="section-item__label">
+                    {{ getSectionLabel(section.type) }}
+                  </span>
+                  <span
+                    v-if="section.useBgColor"
+                    class="section-item__color-dot"
+                    :style="{ backgroundColor: section.bgColor }"
+                  ></span>
+                </div>
+                <!-- 배경색 설정 (선택된 섹션만, 헤더/히어로 제외) -->
+                <div
+                  v-if="selectedSection === section.type && section.type !== 'header' && section.type !== 'hero'"
+                  class="section-bg"
+                  @click.stop
+                >
+                  <div class="section-bg__toggle">
+                    <span class="section-bg__label">배경색</span>
+                    <label class="toggle">
+                      <input
+                        type="checkbox"
+                        :checked="section.useBgColor"
+                        @change="toggleSectionBg(section.type)"
+                      />
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </div>
+                  <div v-if="section.useBgColor" class="section-bg__options">
+                    <button
+                      v-for="preset in bgPresets"
+                      :key="preset.value"
+                      class="section-bg__preset"
+                      :class="{ active: section.bgColor === preset.value }"
+                      :style="{ backgroundColor: preset.value }"
+                      :title="preset.label"
+                      @click="setSectionBg(section.type, preset.value)"
+                    ></button>
+                    <div class="section-bg__custom">
+                      <input
+                        type="color"
+                        :value="section.bgColor"
+                        class="section-bg__picker"
+                        @input="onSectionBgInput(section.type, $event)"
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             </VueDraggable>
           </div>
@@ -160,6 +206,7 @@
                 <div
                   class="section-preview-item"
                   :class="{ 'section-preview-item--selected': selectedSection === section.type }"
+                  :style="section.useBgColor ? { backgroundColor: section.bgColor } : undefined"
                   @click="selectSection(section.type)"
                 >
                   <component
@@ -207,6 +254,12 @@
                 @update="updateChurchIntroContent"
               />
 
+              <WorshipInfoEditor
+                v-else-if="selectedSection === 'worshipInfo'"
+                :content="siteStore.content.worshipInfo"
+                @update="updateWorshipInfoContent"
+              />
+
               <p v-else class="editor-panel__placeholder">
                 편집 패널이 여기에 표시됩니다.
               </p>
@@ -227,14 +280,14 @@
 <script setup lang="ts">
 import { VueDraggable } from 'vue-draggable-plus'
 import { useSiteStore, type BuilderTemplateType } from '~/stores/site'
-import type { SectionType, SectionConfig, HeaderContent, HeroContent, ChurchIntroContent } from '~/types/site'
+import type { SectionType, SectionConfig, HeaderContent, HeroContent, ChurchIntroContent, WorshipInfoContent } from '~/types/site'
 import { useThemeColor } from '~/composables/useThemeColor'
 
 // Section Components
 import HeaderSection from '~/components/sections/HeaderSection.vue'
 import HeroSection from '~/components/sections/HeroSection.vue'
 import ChurchIntroSection from '~/components/sections/ChurchIntroSection.vue'
-import AboutSection from '~/components/sections/AboutSection.vue'
+import WorshipInfoSection from '~/components/sections/WorshipInfoSection.vue'
 import ContactSection from '~/components/sections/ContactSection.vue'
 import FooterSection from '~/components/sections/FooterSection.vue'
 
@@ -242,6 +295,7 @@ import FooterSection from '~/components/sections/FooterSection.vue'
 import HeaderEditor from '~/components/editors/HeaderEditor.vue'
 import HeroEditor from '~/components/editors/HeroEditor.vue'
 import ChurchIntroEditor from '~/components/editors/ChurchIntroEditor.vue'
+import WorshipInfoEditor from '~/components/editors/WorshipInfoEditor.vue'
 
 definePageMeta({
   layout: false
@@ -307,6 +361,35 @@ function generateShades(hex: string): string[] {
   return steps.map(([sat, ll]) => toHex(hDeg, Math.min(sat, 100), ll))
 }
 
+const bgPresets = [
+  { value: '#ffffff', label: '흰색' },
+  { value: '#f9fafb', label: '밝은 회색' },
+  { value: '#f0f1f4', label: '회색' },
+]
+
+const toggleSectionBg = (type: SectionType) => {
+  const section = siteStore.content.sections.find(s => s.type === type)
+  if (section) {
+    section.useBgColor = !section.useBgColor
+    if (section.useBgColor && section.bgColor === '#ffffff') {
+      section.bgColor = '#f3f4f6'
+    }
+    siteStore.isDirty = true
+  }
+}
+
+const setSectionBg = (type: SectionType, color: string) => {
+  const section = siteStore.content.sections.find(s => s.type === type)
+  if (section) {
+    section.bgColor = color
+    siteStore.isDirty = true
+  }
+}
+
+const onSectionBgInput = (type: SectionType, e: Event) => {
+  setSectionBg(type, (e.target as HTMLInputElement).value)
+}
+
 onMounted(() => {
   siteStore.loadFromLocal()
 })
@@ -356,7 +439,7 @@ const sectionComponents: Record<string, any> = {
   header: HeaderSection,
   hero: HeroSection,
   churchIntro: ChurchIntroSection,
-  about: AboutSection,
+  worshipInfo: WorshipInfoSection,
   contact: ContactSection,
   footer: FooterSection
 }
@@ -379,6 +462,10 @@ const updateHeroContent = (content: HeroContent) => {
 
 const updateChurchIntroContent = (content: ChurchIntroContent) => {
   siteStore.updateChurchIntro(content)
+}
+
+const updateWorshipInfoContent = (content: WorshipInfoContent) => {
+  siteStore.updateWorshipInfo(content)
 }
 </script>
 
@@ -607,6 +694,75 @@ const updateChurchIntroContent = (content: ChurchIntroContent) => {
   background-color: var(--gray-200);
   margin: 0.75rem 0;
 }
+
+/* Section bg color */
+.section-item-wrap {
+  position: relative;
+}
+
+.section-item__color-dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--gray-300);
+  flex-shrink: 0;
+}
+
+.section-bg {
+  padding: 0.5rem 0.75rem;
+  background-color: var(--gray-50);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  margin-top: -2px;
+  border: 1px solid var(--gray-200);
+  border-top: none;
+}
+
+.section-bg__toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.section-bg__label {
+  font-size: 0.75rem;
+  color: var(--gray-500);
+}
+
+.section-bg__options {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-top: 0.5rem;
+}
+
+.section-bg__preset {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--gray-200);
+  transition: border-color var(--transition-fast);
+}
+
+.section-bg__preset.active {
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 1px var(--primary-500);
+}
+
+.section-bg__custom {
+  margin-left: auto;
+}
+
+.section-bg__picker {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--gray-300);
+  cursor: pointer;
+  padding: 1px;
+}
+
+.section-bg__picker::-webkit-color-swatch-wrapper { padding: 0; }
+.section-bg__picker::-webkit-color-swatch { border: none; border-radius: 2px; }
 
 .editor-sidebar__back {
   font-size: 0.75rem;

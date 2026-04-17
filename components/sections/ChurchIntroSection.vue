@@ -2,9 +2,10 @@
   <section :id="id" class="section church-intro">
     <div class="container-custom">
       <!-- Section Header -->
-      <div class="church-intro__header">
+      <div class="section-header">
         <h2 class="section-title">{{ content.title }}</h2>
-        <p v-if="content.subtitle" class="section-subtitle church-intro__subtitle">
+        <div v-if="content.showDivider" class="section-divider"></div>
+        <p v-if="content.subtitle" class="section-subtitle">
           {{ content.subtitle }}
         </p>
       </div>
@@ -19,8 +20,13 @@
           :key="index"
           class="intro-card"
           :class="cardStyle"
+          :style="content.style === 'cards' ? cardInlineStyle : undefined"
         >
-          <div class="intro-icon">
+          <div
+            class="intro-icon"
+            :class="{ 'intro-icon--theme': content.iconUseTheme }"
+            :style="!content.iconUseTheme ? { backgroundColor: content.iconBgColor, color: content.iconColor } : undefined"
+          >
             <Icon :name="item.icon" class="icon-32" />
           </div>
           <h3 class="intro-title">{{ item.title }}</h3>
@@ -57,22 +63,47 @@ const cardStyle = computed(() => {
   }
   return styles[props.content.style] || ''
 })
+
+type ShadowSize = { blur: number; spread: number; opacity: number }
+const shadowSizes: Record<string, ShadowSize> = {
+  sm:  { blur: 3,  spread: 0,  opacity: 0.08 },
+  md:  { blur: 8,  spread: -2, opacity: 0.12 },
+  lg:  { blur: 18, spread: -4, opacity: 0.15 },
+}
+
+const dirOffsets: Record<string, [number, number]> = {
+  center: [0, 0],
+  left:   [-4, 4],
+  bottom: [0, 4],
+  right:  [4, 4],
+}
+
+function buildShadow(size: ShadowSize, dir: string): string {
+  const [x, y] = dirOffsets[dir] || [0, 4]
+  const scale = size.blur / 8
+  return `${Math.round(x * scale)}px ${Math.round(y * scale)}px ${size.blur}px ${size.spread}px rgb(0 0 0 / ${size.opacity})`
+}
+
+const cardInlineStyle = computed(() => {
+  const c = props.content
+  const style: Record<string, string> = {
+    backgroundColor: c.cardBgColor || '#f9fafb'
+  }
+  if (c.cardShadow === 'custom') {
+    style.boxShadow = `${c.cardShadowX}px ${c.cardShadowY}px ${c.cardShadowBlur}px ${c.cardShadowSpread}px ${c.cardShadowColor}`
+  } else if (c.cardShadow && c.cardShadow !== 'none') {
+    const size = shadowSizes[c.cardShadow]
+    if (size) {
+      style.boxShadow = buildShadow(size, c.cardShadowDir || 'bottom')
+    }
+  }
+  return style
+})
 </script>
 
 <style scoped>
 .church-intro {
-  background-color: #fff;
-}
-
-.church-intro__header {
-  text-align: center;
-  margin-bottom: 3rem;
-}
-
-.church-intro__subtitle {
-  max-width: 42rem;
-  margin-left: auto;
-  margin-right: auto;
+  background-color: transparent;
 }
 
 .intro-grid {
@@ -99,7 +130,6 @@ const cardStyle = computed(() => {
 
 .intro-card--cards {
   padding: 3rem 1.5rem 3rem;
-  background-color: var(--gray-50);
   border-radius: var(--radius-xl);
   position: relative;
   transition: box-shadow var(--transition-fast);
@@ -124,11 +154,14 @@ const cardStyle = computed(() => {
   height: 4rem;
   margin: 0 auto 1rem;
   border-radius: var(--radius-full);
-  background-color: var(--primary-100);
-  color: var(--primary-500);
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.intro-icon--theme {
+  background-color: var(--primary-100);
+  color: var(--primary-500);
 }
 
 .intro-card--cards .intro-icon {

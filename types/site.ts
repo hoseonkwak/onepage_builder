@@ -6,7 +6,7 @@ export type SectionType =
   | 'header'
   | 'hero'
   | 'churchIntro'
-  | 'about'
+  | 'worshipInfo'
   | 'gallery'
   | 'testimonial'
   | 'pricing'
@@ -22,6 +22,8 @@ export interface SectionConfig {
   enabled: boolean
   order: number
   id: string  // 앵커 링크용
+  useBgColor: boolean
+  bgColor: string
 }
 
 // 전역 설정
@@ -79,24 +81,40 @@ export interface ChurchIntroItem {
 export interface ChurchIntroContent {
   title: string
   subtitle?: string
+  showDivider: boolean
   items: ChurchIntroItem[]
   columns: 2 | 3 | 4
   style: 'cards' | 'icons' | 'minimal'
+  iconUseTheme: boolean
+  iconBgColor: string
+  iconColor: string
+  cardBgColor: string
+  cardShadow: 'none' | 'sm' | 'md' | 'lg' | 'custom'
+  cardShadowDir: 'center' | 'left' | 'bottom' | 'right'
+  cardShadowX: number
+  cardShadowY: number
+  cardShadowBlur: number
+  cardShadowSpread: number
+  cardShadowColor: string
 }
 
-// 회사/팀 소개
-export interface StatItem {
-  value: string
-  label: string
+// 예배안내
+export interface WorshipInfoItem {
+  icon: string
+  title: string
+  description: string
 }
 
-export interface AboutContent {
+export interface WorshipInfoContent {
   title: string
   subtitle?: string
-  description: string
-  image?: string
-  stats?: StatItem[]
-  layout: 'image-left' | 'image-right' | 'image-top'
+  items: WorshipInfoItem[]
+  columns: 2 | 3 | 4
+  iconUseTheme: boolean
+  iconBgColor: string
+  iconColor: string
+  bgColor: string
+  showDivider: boolean
 }
 
 // 갤러리
@@ -224,7 +242,7 @@ export interface SiteContent {
   header: HeaderContent
   hero: HeroContent
   churchIntro: ChurchIntroContent
-  about: AboutContent
+  worshipInfo: WorshipInfoContent
   gallery: GalleryContent
   testimonial: TestimonialContent
   pricing: PricingContent
