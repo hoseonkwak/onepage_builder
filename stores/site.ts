@@ -68,12 +68,17 @@ const getDefaultContent = (): SiteContent => ({
     description: '',
     buttonText: '자세히 보기',
     buttonLink: '#features',
+    buttonUseTheme: true,
+    buttonTextDark: false,
     buttonBgColor: '#3b82f6',
     buttonTextColor: '#ffffff',
     buttonBorderRadius: 8,
     backgroundImage: '',
     textAlign: 'center',
-    height: 500
+    height: 500,
+    dimEnabled: true,
+    dimOpacity: 30,
+    textDark: false
   },
   churchIntro: {
     title: '교회소개',

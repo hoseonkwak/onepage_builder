@@ -7,7 +7,8 @@
 - **프레임워크**: Nuxt 3
 - **언어**: TypeScript
 - **상태관리**: Pinia
-- **스타일링**: Tailwind CSS
+- **스타일링**: 순수 CSS (CSS Custom Properties 기반 디자인 시스템)
+- **아이콘**: nuxt-icon (Iconify)
 - **드래그앤드롭**: vue-draggable-plus
 - **애니메이션**: GSAP
 - **슬라이더**: Swiper
@@ -15,7 +16,7 @@
 ## 요구 사항
 
 - Node.js 18.x 이상
-- npm 또는 yarn
+- npm
 
 ## 실행 방법
 
@@ -33,8 +34,8 @@ npm run dev
 
 개발 서버가 실행되면 브라우저에서 `http://localhost:3000`으로 접속합니다.
 
-- 사용자 페이지: `http://localhost:3000`
-- 어드민 페이지: `http://localhost:3000/admin`
+- 에디터 페이지: `http://localhost:3000`
+- 미리보기 페이지: `http://localhost:3000/preview`
 
 ### 3. 프로덕션 빌드
 
@@ -42,13 +43,7 @@ npm run dev
 npm run build
 ```
 
-### 4. 프로덕션 미리보기
-
-```bash
-npm run preview
-```
-
-### 5. 정적 사이트 생성
+### 4. 정적 사이트 생성
 
 ```bash
 npm run generate
@@ -68,16 +63,33 @@ npm run lint
 
 ```
 onepage_builder/
+├── assets/
+│   └── css/
+│       └── main.css            # 글로벌 스타일 (CSS 변수, 공통 컴포넌트)
 ├── components/
-│   ├── admin/          # 어드민 전용 컴포넌트
-│   ├── sections/       # 원페이지 섹션 컴포넌트
-│   ├── templates/      # 템플릿 프리셋
-│   └── common/         # 공통 컴포넌트
-├── composables/        # Vue 컴포저블
-├── layouts/            # 레이아웃
-├── pages/              # 페이지
-├── stores/             # Pinia 스토어
-└── types/              # TypeScript 타입 정의
+│   ├── sections/               # 원페이지 섹션 컴포넌트
+│   │   ├── HeaderSection.vue
+│   │   ├── HeroSection.vue
+│   │   ├── ChurchIntroSection.vue
+│   │   ├── AboutSection.vue
+│   │   ├── ContactSection.vue
+│   │   └── FooterSection.vue
+│   └── editors/                # 섹션별 편집기
+│       ├── HeaderEditor.vue
+│       ├── HeroEditor.vue
+│       └── ChurchIntroEditor.vue
+├── composables/
+│   └── useThemeColor.ts        # 테마 컬러 팔레트 생성 및 CSS 변수 적용
+├── layouts/
+│   ├── default.vue
+│   └── admin.vue
+├── pages/
+│   ├── index.vue               # 에디터 페이지 (메인)
+│   └── preview.vue             # 미리보기 페이지
+├── stores/
+│   └── site.ts                 # Pinia 상태관리
+└── types/
+    └── site.ts                 # TypeScript 타입 정의
 ```
 
 ## 라이선스

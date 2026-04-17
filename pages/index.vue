@@ -3,8 +3,8 @@
     <!-- 템플릿 선택 화면 -->
     <div v-if="!siteStore.builderTemplate" class="template-select-page">
       <div class="template-select-container">
-        <h1 class="text-3xl font-bold text-gray-900 mb-2">원페이지 빌더</h1>
-        <p class="text-gray-600 mb-8">템플릿을 선택하여 시작하세요</p>
+        <h1 class="template-select__title">원페이지 빌더</h1>
+        <p class="template-select__desc">템플릿을 선택하여 시작하세요</p>
 
         <div class="template-grid">
           <!-- Type 1 -->
@@ -32,10 +32,10 @@
             class="template-card template-card--disabled"
             @click="selectTemplate('type2')"
           >
-            <div class="template-preview template-preview--type2">
+            <div class="template-preview">
               <div class="preview-placeholder">
-                <Icon name="mdi:hammer-wrench" class="w-12 h-12 text-gray-300" />
-                <span class="text-gray-400 text-sm mt-2">준비 중</span>
+                <Icon name="mdi:hammer-wrench" class="icon-48 color-gray-300" />
+                <span class="preview-placeholder__text">준비 중</span>
               </div>
             </div>
             <div class="template-info">
@@ -49,10 +49,10 @@
             class="template-card template-card--disabled"
             @click="selectTemplate('type3')"
           >
-            <div class="template-preview template-preview--type3">
+            <div class="template-preview">
               <div class="preview-placeholder">
-                <Icon name="mdi:hammer-wrench" class="w-12 h-12 text-gray-300" />
-                <span class="text-gray-400 text-sm mt-2">준비 중</span>
+                <Icon name="mdi:hammer-wrench" class="icon-48 color-gray-300" />
+                <span class="preview-placeholder__text">준비 중</span>
               </div>
             </div>
             <div class="template-info">
@@ -66,18 +66,42 @@
 
     <!-- 에디터 화면 -->
     <NuxtLayout v-else name="admin">
-      <div class="flex h-full">
+      <div class="editor-layout">
         <!-- Left Panel: Section List -->
-        <aside class="w-64 bg-white border-r border-gray-200 overflow-y-auto">
-          <div class="p-4">
-            <div class="flex items-center justify-between mb-3">
-              <h2 class="text-sm font-semibold text-gray-600">섹션 구성</h2>
+        <aside class="editor-sidebar">
+          <div class="editor-sidebar__inner">
+            <!-- 메인 컬러 설정 -->
+            <div class="color-setting">
+              <h2 class="editor-sidebar__title">메인 컬러</h2>
+              <div class="color-setting__picker">
+                <input
+                  type="color"
+                  :value="primaryColor"
+                  @input="onColorChange"
+                  class="color-setting__input"
+                />
+                <span class="color-setting__value">{{ primaryColor }}</span>
+              </div>
+              <div class="color-setting__palette">
+                <span
+                  v-for="shade in palettePreview"
+                  :key="shade"
+                  class="color-setting__swatch"
+                  :style="{ backgroundColor: shade }"
+                />
+              </div>
+            </div>
+
+            <div class="editor-sidebar__divider" />
+
+            <div class="editor-sidebar__header">
+              <h2 class="editor-sidebar__title">섹션 구성</h2>
               <button
                 @click="backToTemplateSelect"
-                class="text-xs text-gray-500 hover:text-primary-500"
+                class="editor-sidebar__back"
                 title="템플릿 선택으로 돌아가기"
               >
-                <Icon name="mdi:arrow-left" class="w-4 h-4" />
+                <Icon name="mdi:arrow-left" class="icon-16" />
               </button>
             </div>
 
@@ -87,7 +111,7 @@
               :animation="200"
               handle=".drag-handle"
               @end="onReorder"
-              class="space-y-2"
+              class="stack-2"
             >
               <div
                 v-for="section in sectionList"
@@ -96,14 +120,14 @@
                 :class="{ active: selectedSection === section.type }"
                 @click="selectSection(section.type)"
               >
-                <Icon name="mdi:drag" class="drag-handle w-4 h-4" />
+                <Icon name="mdi:drag" class="drag-handle icon-16" />
                 <input
                   type="checkbox"
                   :checked="section.enabled"
                   @click.stop="toggleSection(section.type)"
-                  class="w-4 h-4 rounded border-gray-300 text-primary-500 focus:ring-primary-500"
+                  class="section-checkbox"
                 />
-                <span class="flex-1 text-sm text-gray-700">
+                <span class="section-item__label">
                   {{ getSectionLabel(section.type) }}
                 </span>
               </div>
@@ -112,12 +136,12 @@
         </aside>
 
         <!-- Center: Preview -->
-        <main class="flex-1 bg-gray-100 overflow-y-auto relative">
-          <!-- Sticky Header - positioned at top of main -->
+        <main class="editor-preview">
+          <!-- Sticky Header -->
           <div
             v-if="headerSection && headerSection.enabled"
-            class="sticky top-0 z-40 mx-auto section-preview-item bg-white shadow-sm"
-            :class="{ 'ring-2 ring-blue-500': selectedSection === 'header' }"
+            class="editor-preview__sticky-header section-preview-item"
+            :class="{ 'section-preview-item--selected': selectedSection === 'header' }"
             style="max-width: 1200px;"
             @click="selectSection('header')"
           >
@@ -130,12 +154,12 @@
           </div>
 
           <!-- Other Sections -->
-          <div class="p-4 pt-0">
-            <div class="preview-container mx-auto bg-white shadow-lg" style="max-width: 1200px;">
+          <div class="editor-preview__body">
+            <div class="preview-container editor-preview__container">
               <template v-for="section in nonHeaderSections" :key="section.id">
                 <div
                   class="section-preview-item"
-                  :class="{ 'ring-2 ring-blue-500': selectedSection === section.type }"
+                  :class="{ 'section-preview-item--selected': selectedSection === section.type }"
                   @click="selectSection(section.type)"
                 >
                   <component
@@ -148,53 +172,49 @@
               </template>
 
               <!-- Empty state -->
-              <div v-if="enabledSections.length === 0" class="text-center py-20 text-gray-500">
-                <Icon name="mdi:view-grid-plus-outline" class="w-16 h-16 mx-auto mb-4 opacity-30" />
+              <div v-if="enabledSections.length === 0" class="editor-preview__empty">
+                <Icon name="mdi:view-grid-plus-outline" class="icon-64 color-gray-300" />
                 <p>활성화된 섹션이 없습니다.</p>
-                <p class="text-sm mt-1">왼쪽 패널에서 섹션을 체크해주세요.</p>
+                <p class="editor-preview__empty-hint">왼쪽 패널에서 섹션을 체크해주세요.</p>
               </div>
             </div>
           </div>
         </main>
 
         <!-- Right Panel: Editor -->
-        <aside class="w-96 bg-white border-l border-gray-200 overflow-y-auto">
-          <div class="p-4">
+        <aside class="editor-panel">
+          <div class="editor-panel__inner">
             <template v-if="selectedSection">
-              <h2 class="text-lg font-semibold text-gray-900 mb-4">
+              <h2 class="editor-panel__title">
                 {{ getSectionLabel(selectedSection) }} 편집
               </h2>
 
-              <!-- Header Editor -->
               <HeaderEditor
                 v-if="selectedSection === 'header'"
                 :content="siteStore.content.header"
                 @update="updateHeaderContent"
               />
 
-              <!-- Hero Editor -->
               <HeroEditor
                 v-else-if="selectedSection === 'hero'"
                 :content="siteStore.content.hero"
                 @update="updateHeroContent"
               />
 
-              <!-- ChurchIntro Editor -->
               <ChurchIntroEditor
                 v-else-if="selectedSection === 'churchIntro'"
                 :content="siteStore.content.churchIntro"
                 @update="updateChurchIntroContent"
               />
 
-              <!-- Other section editors placeholder -->
-              <p v-else class="text-sm text-gray-500">
+              <p v-else class="editor-panel__placeholder">
                 편집 패널이 여기에 표시됩니다.
               </p>
             </template>
             <template v-else>
-              <div class="text-center text-gray-500 py-8">
-                <Icon name="mdi:cursor-default-click" class="w-12 h-12 mx-auto mb-2 opacity-50" />
-                <p class="text-sm">섹션을 선택하세요</p>
+              <div class="editor-panel__empty">
+                <Icon name="mdi:cursor-default-click" class="icon-48 color-gray-400" />
+                <p>섹션을 선택하세요</p>
               </div>
             </template>
           </div>
@@ -208,6 +228,7 @@
 import { VueDraggable } from 'vue-draggable-plus'
 import { useSiteStore, type BuilderTemplateType } from '~/stores/site'
 import type { SectionType, SectionConfig, HeaderContent, HeroContent, ChurchIntroContent } from '~/types/site'
+import { useThemeColor } from '~/composables/useThemeColor'
 
 // Section Components
 import HeaderSection from '~/components/sections/HeaderSection.vue'
@@ -227,13 +248,69 @@ definePageMeta({
 })
 
 const siteStore = useSiteStore()
+const { primaryColor, setPrimaryColor } = useThemeColor()
 
-// Load saved content on mount
+const onColorChange = (e: Event) => {
+  setPrimaryColor((e.target as HTMLInputElement).value)
+}
+
+const palettePreview = computed(() => {
+  return generateShades(primaryColor.value)
+})
+
+function generateShades(hex: string): string[] {
+  const r = parseInt(hex.slice(1, 3), 16) / 255
+  const g = parseInt(hex.slice(3, 5), 16) / 255
+  const b = parseInt(hex.slice(5, 7), 16) / 255
+
+  const max = Math.max(r, g, b), min = Math.min(r, g, b)
+  let h = 0, s = 0
+  const l = (max + min) / 2
+
+  if (max !== min) {
+    const d = max - min
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
+    switch (max) {
+      case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break
+      case g: h = ((b - r) / d + 2) / 6; break
+      case b: h = ((r - g) / d + 4) / 6; break
+    }
+  }
+
+  const hDeg = h * 360
+  const toHex = (hh: number, ss: number, ll: number) => {
+    ss /= 100; ll /= 100
+    const a = ss * Math.min(ll, 1 - ll)
+    const f = (n: number) => {
+      const k = (n + hh / 30) % 12
+      const c = ll - a * Math.max(Math.min(k - 3, 9 - k, 1), -1)
+      return Math.round(255 * c).toString(16).padStart(2, '0')
+    }
+    return `#${f(0)}${f(8)}${f(4)}`
+  }
+
+  const baseS = s * 100
+  const baseL = l * 100
+  const baseSat = Math.max(baseS, 15)
+  const steps: [number, number][] = [
+    [baseSat * 0.3,  Math.min(baseL + 44, 97)],
+    [baseSat * 0.4,  Math.min(baseL + 38, 94)],
+    [baseSat * 0.55, Math.min(baseL + 30, 90)],
+    [baseSat * 0.7,  Math.min(baseL + 20, 82)],
+    [baseSat * 0.85, Math.min(baseL + 10, 72)],
+    [baseSat,        baseL],
+    [baseSat,        Math.max(baseL - 8, 5)],
+    [baseSat,        Math.max(baseL - 15, 4)],
+    [baseSat * 0.95, Math.max(baseL - 22, 3)],
+    [baseSat * 0.9,  Math.max(baseL - 28, 2)],
+  ]
+  return steps.map(([sat, ll]) => toHex(hDeg, Math.min(sat, 100), ll))
+}
+
 onMounted(() => {
   siteStore.loadFromLocal()
 })
 
-// Template selection
 const selectTemplate = (template: BuilderTemplateType) => {
   siteStore.selectBuilderTemplate(template)
 }
@@ -242,7 +319,6 @@ const backToTemplateSelect = () => {
   siteStore.resetBuilderTemplate()
 }
 
-// Section list for draggable
 const sectionList = computed({
   get: () => [...siteStore.content.sections].sort((a, b) => a.order - b.order),
   set: (value: SectionConfig[]) => {
@@ -250,15 +326,12 @@ const sectionList = computed({
   }
 })
 
-// Get enabled sections in order
 const enabledSections = computed(() => siteStore.enabledSections)
 
-// Header section separately for sticky positioning
 const headerSection = computed(() =>
   siteStore.content.sections.find((s: SectionConfig) => s.type === 'header')
 )
 
-// Non-header sections for normal rendering
 const nonHeaderSections = computed(() =>
   enabledSections.value.filter((s: SectionConfig) => s.type !== 'header')
 )
@@ -279,7 +352,6 @@ const onReorder = () => {
   siteStore.reorderSections(sectionList.value)
 }
 
-// Section component mapping
 const sectionComponents: Record<string, any> = {
   header: HeaderSection,
   hero: HeroSection,
@@ -297,89 +369,352 @@ const getSectionContent = (type: SectionType) => {
   return siteStore.content[type]
 }
 
-// Update header content
 const updateHeaderContent = (content: HeaderContent) => {
   siteStore.updateHeader(content)
 }
 
-// Update hero content
 const updateHeroContent = (content: HeroContent) => {
   siteStore.updateHero(content)
 }
 
-// Update churchIntro content
 const updateChurchIntroContent = (content: ChurchIntroContent) => {
   siteStore.updateChurchIntro(content)
 }
 </script>
 
 <style scoped>
-/* 템플릿 선택 페이지 */
+/* Template Select */
 .template-select-page {
-  @apply min-h-screen bg-gray-50 flex items-center justify-center p-8;
+  min-height: 100vh;
+  background-color: var(--gray-50);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
 }
 
 .template-select-container {
-  @apply text-center max-w-4xl mx-auto;
+  text-align: center;
+  max-width: 56rem;
+  margin: 0 auto;
+}
+
+.template-select__title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 0.5rem;
+}
+
+.template-select__desc {
+  color: var(--gray-600);
+  margin-bottom: 2rem;
 }
 
 .template-grid {
-  @apply grid grid-cols-1 md:grid-cols-3 gap-6;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .template-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 .template-card {
-  @apply bg-white rounded-xl shadow-md overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-xl hover:-translate-y-1 border-2 border-transparent;
+  background-color: #fff;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border: 2px solid transparent;
 }
 
 .template-card:hover {
-  @apply border-primary-500;
+  box-shadow: var(--shadow-xl);
+  transform: translateY(-4px);
+  border-color: var(--primary-500);
 }
 
 .template-card--disabled {
-  @apply opacity-60 cursor-not-allowed;
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .template-card--disabled:hover {
-  @apply border-transparent shadow-md translate-y-0;
+  border-color: transparent;
+  box-shadow: var(--shadow-md);
+  transform: none;
 }
 
 .template-preview {
-  @apply h-48 bg-gray-100 p-4;
+  height: 12rem;
+  background-color: var(--gray-100);
+  padding: 1rem;
 }
 
 .template-preview--type1 {
-  @apply flex flex-col gap-2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .preview-header {
-  @apply h-4 bg-gray-300 rounded;
+  height: 1rem;
+  background-color: var(--gray-300);
+  border-radius: var(--radius-sm);
 }
 
 .preview-hero {
-  @apply h-16 bg-primary-200 rounded;
+  height: 4rem;
+  background-color: var(--primary-200);
+  border-radius: var(--radius-sm);
 }
 
 .preview-content {
-  @apply flex-1 flex gap-2;
+  flex: 1;
+  display: flex;
+  gap: 0.5rem;
 }
 
 .preview-box {
-  @apply flex-1 bg-gray-200 rounded;
+  flex: 1;
+  background-color: var(--gray-200);
+  border-radius: var(--radius-sm);
 }
 
 .preview-placeholder {
-  @apply h-full flex flex-col items-center justify-center;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-placeholder__text {
+  color: var(--gray-400);
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
 }
 
 .template-info {
-  @apply p-4 text-left;
+  padding: 1rem;
+  text-align: left;
 }
 
 .template-name {
-  @apply font-semibold text-gray-900;
+  font-weight: 600;
+  color: var(--gray-900);
 }
 
 .template-desc {
-  @apply text-sm text-gray-500;
+  font-size: 0.875rem;
+  color: var(--gray-500);
 }
+
+/* Editor Layout */
+.editor-layout {
+  display: flex;
+  height: 100%;
+}
+
+.editor-sidebar {
+  width: var(--sidebar-width);
+  background-color: #fff;
+  border-right: 1px solid var(--gray-200);
+  overflow-y: auto;
+}
+
+.editor-sidebar__inner {
+  padding: 1rem;
+}
+
+.editor-sidebar__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.editor-sidebar__title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--gray-600);
+}
+
+/* Color Setting */
+.color-setting {
+  margin-bottom: 0.5rem;
+}
+
+.color-setting__picker {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.color-setting__input {
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--gray-300);
+  cursor: pointer;
+  padding: 1px;
+  flex-shrink: 0;
+}
+
+.color-setting__input::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.color-setting__input::-webkit-color-swatch {
+  border: none;
+  border-radius: 3px;
+}
+
+.color-setting__value {
+  font-size: 0.75rem;
+  color: var(--gray-500);
+  font-family: monospace;
+}
+
+.color-setting__palette {
+  display: flex;
+  gap: 2px;
+  margin-top: 0.5rem;
+}
+
+.color-setting__swatch {
+  flex: 1;
+  height: 0.75rem;
+  border-radius: 2px;
+}
+
+.color-setting__swatch:first-child {
+  border-radius: 2px 0 0 2px;
+}
+
+.color-setting__swatch:last-child {
+  border-radius: 0 2px 2px 0;
+}
+
+.editor-sidebar__divider {
+  height: 1px;
+  background-color: var(--gray-200);
+  margin: 0.75rem 0;
+}
+
+.editor-sidebar__back {
+  font-size: 0.75rem;
+  color: var(--gray-500);
+  transition: color var(--transition-fast);
+}
+
+.editor-sidebar__back:hover {
+  color: var(--primary-500);
+}
+
+.section-checkbox {
+  width: 1rem;
+  height: 1rem;
+  border-radius: var(--radius-sm);
+  accent-color: var(--primary-500);
+}
+
+.section-item__label {
+  flex: 1;
+  font-size: 0.875rem;
+  color: var(--gray-700);
+}
+
+/* Preview */
+.editor-preview {
+  flex: 1;
+  background-color: var(--gray-100);
+  overflow-y: auto;
+  position: relative;
+}
+
+.editor-preview__sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  margin: 0 auto;
+  background-color: #fff;
+  box-shadow: var(--shadow-sm);
+}
+
+.editor-preview__body {
+  padding: 1rem;
+  padding-top: 0;
+}
+
+.editor-preview__container {
+  margin: 0 auto;
+  box-shadow: var(--shadow-lg);
+  max-width: 1200px;
+}
+
+.section-preview-item--selected {
+  outline: 2px solid var(--primary-500);
+  outline-offset: -2px;
+}
+
+.editor-preview__empty {
+  text-align: center;
+  padding: 5rem 0;
+  color: var(--gray-500);
+}
+
+.editor-preview__empty-hint {
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* Editor Panel */
+.editor-panel {
+  width: var(--editor-width);
+  background-color: #fff;
+  border-left: 1px solid var(--gray-200);
+  overflow-y: auto;
+}
+
+.editor-panel__inner {
+  padding: 1rem;
+}
+
+.editor-panel__title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--gray-900);
+  margin-bottom: 1rem;
+}
+
+.editor-panel__placeholder {
+  font-size: 0.875rem;
+  color: var(--gray-500);
+}
+
+.editor-panel__empty {
+  text-align: center;
+  color: var(--gray-500);
+  padding: 2rem 0;
+}
+
+.editor-panel__empty p {
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+/* Icon size utilities */
+.icon-16 { width: 1rem; height: 1rem; }
+.icon-48 { width: 3rem; height: 3rem; }
+.icon-64 { width: 4rem; height: 4rem; }
+
+.color-gray-300 { color: var(--gray-300); }
+.color-gray-400 { color: var(--gray-400); }
 </style>

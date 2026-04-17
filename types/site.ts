@@ -56,12 +56,17 @@ export interface HeroContent {
   description?: string
   buttonText: string
   buttonLink: string
+  buttonUseTheme: boolean
+  buttonTextDark: boolean
   buttonBgColor: string
   buttonTextColor: string
   buttonBorderRadius: number // px 단위
   backgroundImage?: string
   textAlign: 'left' | 'center' | 'right'
   height: number // px 단위
+  dimEnabled: boolean
+  dimOpacity: number // 0~100
+  textDark: boolean // true=검정, false=흰색
 }
 
 // 교회소개

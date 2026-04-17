@@ -1,9 +1,9 @@
 <template>
-  <div class="church-intro-editor space-y-6">
+  <div class="church-intro-editor stack-6">
     <!-- 제목 영역 -->
     <div class="editor-section">
       <h3 class="editor-section-title">제목</h3>
-      <div class="space-y-3">
+      <div class="stack-3">
         <div>
           <label class="editor-label">섹션 제목</label>
           <input
@@ -30,22 +30,22 @@
     <!-- 아이템 목록 -->
     <div class="editor-section">
       <h3 class="editor-section-title">소개 항목</h3>
-      <div class="space-y-4">
+      <div class="stack-4">
         <div
           v-for="(item, index) in localContent.items"
           :key="index"
           class="item-card"
         >
-          <div class="flex justify-between items-center mb-2">
-            <span class="text-sm font-medium text-gray-700">항목 {{ index + 1 }}</span>
+          <div class="item-card__header">
+            <span class="item-card__index">항목 {{ index + 1 }}</span>
             <button
               @click="removeItem(index)"
-              class="text-red-500 hover:text-red-700 text-sm"
+              class="item-card__delete"
             >
               삭제
             </button>
           </div>
-          <div class="space-y-2">
+          <div class="stack-2">
             <div>
               <label class="editor-label">아이콘</label>
               <input
@@ -55,8 +55,8 @@
                 placeholder="mdi:cross"
                 @input="(e) => updateItemField(index, 'icon', getInputValue(e))"
               />
-              <p class="text-xs text-gray-500 mt-1">
-                <a href="https://icon-sets.iconify.design/mdi/" target="_blank" class="text-primary-500 hover:underline">아이콘 검색</a>
+              <p class="hint">
+                <a href="https://icon-sets.iconify.design/mdi/" target="_blank" class="hint-link">아이콘 검색</a>
               </p>
             </div>
             <div>
@@ -73,7 +73,7 @@
               <label class="editor-label">설명</label>
               <textarea
                 :value="item.description"
-                class="editor-input"
+                class="editor-input editor-textarea"
                 rows="2"
                 placeholder="항목 설명"
                 @input="(e) => updateItemField(index, 'description', getInputValue(e))"
@@ -84,7 +84,7 @@
 
         <button
           @click="addItem"
-          class="w-full py-2 px-4 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-primary-500 hover:text-primary-500 transition-colors"
+          class="add-item-btn"
         >
           + 항목 추가
         </button>
@@ -94,17 +94,15 @@
     <!-- 레이아웃 설정 -->
     <div class="editor-section">
       <h3 class="editor-section-title">레이아웃</h3>
-      <div class="space-y-3">
+      <div class="stack-3">
         <div>
           <label class="editor-label">컬럼 수</label>
-          <div class="flex gap-2">
+          <div class="option-row">
             <button
               v-for="col in columnOptions"
               :key="col.value"
-              class="flex-1 py-2 px-3 text-sm rounded-md border transition-colors"
-              :class="localContent.columns === col.value
-                ? 'bg-primary-500 text-white border-primary-500'
-                : 'bg-white text-gray-700 border-gray-300 hover:border-primary-300'"
+              class="option-btn"
+              :class="{ active: localContent.columns === col.value }"
               @click="setColumns(col.value)"
             >
               {{ col.label }}
@@ -113,14 +111,12 @@
         </div>
         <div>
           <label class="editor-label">스타일</label>
-          <div class="flex gap-2">
+          <div class="option-row">
             <button
               v-for="style in styleOptions"
               :key="style.value"
-              class="flex-1 py-2 px-3 text-sm rounded-md border transition-colors"
-              :class="localContent.style === style.value
-                ? 'bg-primary-500 text-white border-primary-500'
-                : 'bg-white text-gray-700 border-gray-300 hover:border-primary-300'"
+              class="option-btn"
+              :class="{ active: localContent.style === style.value }"
               @click="setStyle(style.value)"
             >
               {{ style.label }}
@@ -156,18 +152,15 @@ const styleOptions = [
   { value: 'minimal' as const, label: '미니멀' }
 ]
 
-// Local copy for editing
 const localContent = ref<ChurchIntroContent>({
   ...props.content,
   items: props.content.items.map(item => ({ ...item }))
 })
 
-// Get input value from event
 const getInputValue = (e: Event): string => {
   return (e.target as HTMLInputElement).value
 }
 
-// Emit update to parent
 const emitUpdate = () => {
   emit('update', {
     ...localContent.value,
@@ -175,13 +168,11 @@ const emitUpdate = () => {
   })
 }
 
-// Update item field
 const updateItemField = (index: number, field: keyof ChurchIntroItem, value: string) => {
   localContent.value.items[index][field] = value
   emitUpdate()
 }
 
-// Add new item
 const addItem = () => {
   localContent.value.items.push({
     icon: 'mdi:church',
@@ -191,25 +182,21 @@ const addItem = () => {
   emitUpdate()
 }
 
-// Remove item
 const removeItem = (index: number) => {
   localContent.value.items.splice(index, 1)
   emitUpdate()
 }
 
-// Set columns
 const setColumns = (value: 2 | 3 | 4) => {
   localContent.value.columns = value
   emitUpdate()
 }
 
-// Set style
 const setStyle = (value: 'cards' | 'icons' | 'minimal') => {
   localContent.value.style = value
   emitUpdate()
 }
 
-// Update local when props change
 watch(() => props.content, (newVal: ChurchIntroContent) => {
   localContent.value = {
     ...newVal,
@@ -219,27 +206,65 @@ watch(() => props.content, (newVal: ChurchIntroContent) => {
 </script>
 
 <style scoped>
-.editor-section {
-  @apply bg-gray-50 rounded-lg p-4;
-}
-
-.editor-section-title {
-  @apply text-sm font-semibold text-gray-900 mb-3 pb-2 border-b border-gray-200;
-}
-
-.editor-label {
-  @apply block text-sm text-gray-600 mb-1;
-}
-
-.editor-input {
-  @apply w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-colors;
-}
-
-textarea.editor-input {
-  @apply resize-none;
+.editor-textarea {
+  resize: none;
 }
 
 .item-card {
-  @apply bg-white p-3 rounded-lg border border-gray-200;
+  background-color: #fff;
+  padding: 0.75rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--gray-200);
+}
+
+.item-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.item-card__index {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--gray-700);
+}
+
+.item-card__delete {
+  color: var(--red-500);
+  font-size: 0.875rem;
+  transition: color var(--transition-fast);
+}
+
+.item-card__delete:hover {
+  color: var(--red-700);
+}
+
+.hint-link {
+  color: var(--primary-500);
+  transition: text-decoration var(--transition-fast);
+}
+
+.hint-link:hover {
+  text-decoration: underline;
+}
+
+.add-item-btn {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: 2px dashed var(--gray-300);
+  border-radius: var(--radius-lg);
+  color: var(--gray-500);
+  transition: all var(--transition-fast);
+}
+
+.add-item-btn:hover {
+  border-color: var(--primary-500);
+  color: var(--primary-500);
+}
+
+.option-row {
+  display: flex;
+  gap: 0.5rem;
 }
 </style>

@@ -1,18 +1,18 @@
 <template>
-  <section :id="id" class="section bg-white">
+  <section :id="id" class="section church-intro">
     <div class="container-custom">
       <!-- Section Header -->
-      <div class="text-center mb-12">
+      <div class="church-intro__header">
         <h2 class="section-title">{{ content.title }}</h2>
-        <p v-if="content.subtitle" class="section-subtitle max-w-2xl mx-auto">
+        <p v-if="content.subtitle" class="section-subtitle church-intro__subtitle">
           {{ content.subtitle }}
         </p>
       </div>
 
       <!-- Intro Grid -->
       <div
-        class="grid gap-8"
-        :class="gridCols"
+        class="intro-grid"
+        :style="gridStyle"
       >
         <div
           v-for="(item, index) in content.items"
@@ -21,7 +21,7 @@
           :class="cardStyle"
         >
           <div class="intro-icon">
-            <Icon :name="item.icon" class="w-8 h-8" />
+            <Icon :name="item.icon" class="icon-32" />
           </div>
           <h3 class="intro-title">{{ item.title }}</h3>
           <p class="intro-description">{{ item.description }}</p>
@@ -41,17 +41,16 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const gridCols = computed(() => {
-  const cols = {
-    2: 'md:grid-cols-2',
-    3: 'md:grid-cols-3',
-    4: 'md:grid-cols-2 lg:grid-cols-4'
-  }
-  return cols[props.content.columns] || 'md:grid-cols-3'
+const gridStyle = computed(() => {
+  const cols = props.content.columns || 3
+  return {
+    '--grid-cols': cols,
+    '--grid-cols-md': Math.min(cols, 2),
+  } as Record<string, string | number>
 })
 
 const cardStyle = computed(() => {
-  const styles = {
+  const styles: Record<string, string> = {
     cards: 'intro-card--cards',
     icons: 'intro-card--icons',
     minimal: 'intro-card--minimal'
@@ -61,35 +60,101 @@ const cardStyle = computed(() => {
 </script>
 
 <style scoped>
+.church-intro {
+  background-color: #fff;
+}
+
+.church-intro__header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.church-intro__subtitle {
+  max-width: 42rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.intro-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .intro-grid {
+    grid-template-columns: repeat(var(--grid-cols-md, 2), 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .intro-grid {
+    grid-template-columns: repeat(var(--grid-cols, 3), 1fr);
+  }
+}
+
 .intro-card {
-  @apply text-center;
+  text-align: center;
 }
 
 .intro-card--cards {
-  @apply p-6 pt-12 pb-12 bg-gray-50 rounded-xl hover:shadow-lg transition-shadow relative;
+  padding: 3rem 1.5rem 3rem;
+  background-color: var(--gray-50);
+  border-radius: var(--radius-xl);
+  position: relative;
+  transition: box-shadow var(--transition-fast);
+}
+
+.intro-card--cards:hover {
+  box-shadow: var(--shadow-lg);
 }
 
 .intro-card--icons {
-  @apply p-4;
+  padding: 1rem;
 }
 
 .intro-card--minimal {
-  @apply p-4 border-l-2 border-primary-500 text-left;
+  padding: 1rem;
+  border-left: 2px solid var(--primary-500);
+  text-align: left;
 }
 
 .intro-icon {
-  @apply w-16 h-16 mx-auto mb-4 rounded-full bg-primary-100 text-primary-500 flex items-center justify-center absolute top-[-2rem] left-1/2 -translate-x-1/2;
+  width: 4rem;
+  height: 4rem;
+  margin: 0 auto 1rem;
+  border-radius: var(--radius-full);
+  background-color: var(--primary-100);
+  color: var(--primary-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.intro-card--cards .intro-icon {
+  position: absolute;
+  top: -2rem;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .intro-card--minimal .intro-icon {
-  @apply mx-0 w-12 h-12;
+  margin: 0 0 1rem 0;
+  width: 3rem;
+  height: 3rem;
 }
 
 .intro-title {
-  @apply text-2xl font-semibold text-gray-900 mb-4;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--gray-900);
+  margin-bottom: 1rem;
 }
 
 .intro-description {
-  @apply text-gray-600 text-[1rem];
+  color: var(--gray-600);
+  font-size: 1rem;
 }
+
+.icon-32 { width: 2rem; height: 2rem; }
 </style>

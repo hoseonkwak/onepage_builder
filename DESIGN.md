@@ -13,22 +13,13 @@
 │   "원페이지 전문 빌더"                                        │
 │                                                              │
 │   1. 템플릿 선택                                              │
-│   2. 섹션 On/Off & 순서 변경 (드래그앤드롭)                   │
-│   3. 텍스트/이미지 수정                                       │
-│   4. 저장 & 완료!                                            │
+│   2. 메인 컬러 설정                                           │
+│   3. 섹션 On/Off & 순서 변경 (드래그앤드롭)                   │
+│   4. 텍스트/이미지 수정                                       │
+│   5. 저장 & 완료!                                            │
 │                                                              │
 └─────────────────────────────────────────────────────────────┘
 ```
-
-### homepage_builder와의 차이점
-
-| 항목 | homepage_builder | onepage_builder |
-|------|------------------|-----------------|
-| 페이지 구조 | 다중 페이지 (메인 + 서브페이지) | 단일 페이지 (원페이지) |
-| 메뉴 시스템 | 계층형 메뉴 (드롭다운 지원) | 앵커 네비게이션 (같은 페이지 내 스크롤) |
-| 섹션 순서 | 고정 | 드래그앤드롭으로 변경 가능 |
-| 용도 | 기업/단체 홈페이지 | 랜딩페이지, 프로모션, 포트폴리오 |
-| 복잡도 | 높음 | 낮음 (심플) |
 
 ---
 
@@ -44,8 +35,9 @@
 │   │  / (메인)      │                    │  /preview     │        │
 │   │               │                    │               │        │
 │   │  - 템플릿 선택  │                    │  - 원페이지    │        │
-│   │  - 섹션 편집    │                    │    동적 렌더링  │        │
-│   │  - 순서 변경    │                    │  - SSR/SSG    │        │
+│   │  - 메인 컬러   │                    │    동적 렌더링  │        │
+│   │  - 섹션 편집    │                    │  - SSR/SSG    │        │
+│   │  - 순서 변경    │                    │               │        │
 │   │  - 미리보기    │                    │               │        │
 │   └───────────────┘                    └───────────────┘        │
 │                                                                  │
@@ -71,11 +63,11 @@
 | 프레임워크 | Nuxt 3 | 3.x |
 | 언어 | TypeScript | 5.x |
 | 상태관리 | Pinia | 2.x |
-| 스타일링 | Tailwind CSS | 3.x |
-| 아이콘 | Iconify | - |
+| 스타일링 | 순수 CSS (CSS Custom Properties) | - |
+| 아이콘 | nuxt-icon (Iconify) | 0.6.x |
 | 드래그앤드롭 | vue-draggable-plus | 0.5.x |
 | 애니메이션 | GSAP | 3.x |
-| 슬라이더 | Swiper | 11.x |
+| 슬라이더 | Swiper | 12.x |
 | 데이터베이스 | MongoDB (Phase 3+) | 7.x |
 
 ---
@@ -86,62 +78,45 @@
 onepage_builder/
 ├── nuxt.config.ts
 ├── package.json
-├── tailwind.config.js
 ├── tsconfig.json
 ├── DESIGN.md                     # 이 설계 문서
+├── PROGRESS.md                   # 개발 진행 상황
+├── README.md                     # 실행 방법
 │
 ├── assets/
 │   └── css/
-│       └── main.css              # 전역 스타일
+│       └── main.css              # 글로벌 스타일 (CSS 변수, 공통 컴포넌트)
 │
 ├── components/
-│   ├── editor/                   # 에디터 전용 컴포넌트
-│   │   ├── TemplateSelector.vue  # 템플릿 선택 UI
-│   │   ├── SectionList.vue       # 섹션 목록 (드래그앤드롭)
-│   │   ├── SectionEditor.vue     # 섹션별 편집 폼
-│   │   └── PreviewPanel.vue      # 미리보기 패널
-│   │
 │   ├── sections/                 # 원페이지 섹션 컴포넌트
-│   │   ├── HeaderSection.vue     # 헤더 (앵커 네비게이션)
-│   │   ├── HeroSection.vue       # 히어로 섹션
-│   │   ├── FeaturesSection.vue   # 기능/서비스 소개
-│   │   ├── AboutSection.vue      # 회사/팀 소개
-│   │   ├── GallerySection.vue    # 갤러리/포트폴리오
-│   │   ├── TestimonialSection.vue# 고객 후기
-│   │   ├── PricingSection.vue    # 가격표
-│   │   ├── TeamSection.vue       # 팀 소개
-│   │   ├── FAQSection.vue        # FAQ
-│   │   ├── CTASection.vue        # CTA (행동 유도)
-│   │   ├── ContactSection.vue    # 연락처/문의
-│   │   └── FooterSection.vue     # 푸터
+│   │   ├── HeaderSection.vue
+│   │   ├── HeroSection.vue
+│   │   ├── ChurchIntroSection.vue
+│   │   ├── AboutSection.vue
+│   │   ├── ContactSection.vue
+│   │   └── FooterSection.vue
 │   │
-│   ├── templates/                # 템플릿 프리셋
-│   │   ├── BusinessTemplate.vue  # 비즈니스 랜딩
-│   │   ├── PortfolioTemplate.vue # 포트폴리오
-│   │   ├── ProductTemplate.vue   # 제품 런칭
-│   │   └── EventTemplate.vue     # 이벤트/프로모션
-│   │
-│   └── common/                   # 공통 컴포넌트
-│       ├── SectionRenderer.vue   # 섹션 동적 렌더링
-│       └── ScrollIndicator.vue   # 스크롤 인디케이터
+│   └── editors/                  # 섹션별 편집기
+│       ├── HeaderEditor.vue
+│       ├── HeroEditor.vue
+│       └── ChurchIntroEditor.vue
 │
 ├── composables/
-│   ├── useSections.ts            # 섹션 관리 로직
-│   └── useScrollspy.ts           # 스크롤 스파이 (앵커 네비게이션)
+│   └── useThemeColor.ts          # 테마 컬러 팔레트 생성 및 CSS 변수 적용
 │
 ├── layouts/
-│   ├── default.vue               # 기본 레이아웃
-│   └── admin.vue                 # 에디터 레이아웃
+│   ├── default.vue
+│   └── admin.vue
 │
 ├── pages/
 │   ├── index.vue                 # 에디터 페이지 (메인)
 │   └── preview.vue               # 미리보기 페이지
 │
 ├── stores/
-│   └── site.ts                   # 사이트 콘텐츠 상태
+│   └── site.ts                   # Pinia 상태관리
 │
 ├── types/
-│   └── site.ts                   # 타입 정의
+│   └── site.ts                   # TypeScript 타입 정의
 │
 └── public/
     └── uploads/                  # 업로드된 이미지
@@ -149,512 +124,243 @@ onepage_builder/
 
 ---
 
-## 5. 데이터 모델
+## 5. 스타일링 시스템
 
-### 5.1 SiteContent (사이트 콘텐츠)
+Tailwind CSS를 제거하고 **순수 CSS + CSS Custom Properties** 기반 디자인 시스템을 사용합니다.
 
-```typescript
-// 템플릿 타입
-type TemplateType = 'business' | 'portfolio' | 'product' | 'event'
+### 5.1 CSS 변수 구조 (`assets/css/main.css`)
 
-// 섹션 타입
-type SectionType =
-  | 'header'
-  | 'hero'
-  | 'features'
-  | 'about'
-  | 'gallery'
-  | 'testimonial'
-  | 'pricing'
-  | 'team'
-  | 'faq'
-  | 'cta'
-  | 'contact'
-  | 'footer'
+```css
+:root {
+  /* 프라이머리 컬러 (테마 컬러에 의해 동적으로 변경됨) */
+  --primary-50 ~ --primary-900
 
-// 사이트 콘텐츠
-interface SiteContent {
-  templateId: TemplateType;
+  /* 그레이 스케일 */
+  --gray-50 ~ --gray-900
 
-  // 활성화된 섹션 (순서대로)
-  sections: SectionConfig[];
+  /* 반경, 그림자, 트랜지션 */
+  --radius-sm, --radius-md, --radius-lg, --radius-xl, --radius-full
+  --shadow-sm, --shadow-md, --shadow-lg, --shadow-xl
+  --transition-fast (200ms), --transition-normal (300ms)
 
-  // 각 섹션 콘텐츠
-  header: HeaderContent;
-  hero: HeroContent;
-  features: FeaturesContent;
-  about: AboutContent;
-  gallery: GalleryContent;
-  testimonial: TestimonialContent;
-  pricing: PricingContent;
-  team: TeamContent;
-  faq: FAQContent;
-  cta: CTAContent;
-  contact: ContactContent;
-  footer: FooterContent;
-
-  // 전역 설정
-  settings: GlobalSettings;
-}
-
-// 섹션 설정
-interface SectionConfig {
-  type: SectionType;
-  enabled: boolean;
-  order: number;
-  id: string;  // 앵커 링크용 (예: 'about', 'features')
-}
-
-// 전역 설정
-interface GlobalSettings {
-  primaryColor: string;
-  fontFamily: string;
-  logoImage?: string;
-  logoText: string;
-  faviconImage?: string;
+  /* 레이아웃 */
+  --sidebar-width (16rem), --editor-width (24rem), --container-max (80rem)
 }
 ```
 
-### 5.2 섹션별 콘텐츠 타입
+### 5.2 테마 컬러 시스템 (`composables/useThemeColor.ts`)
 
-```typescript
-// 헤더 (앵커 네비게이션)
-interface HeaderContent {
-  logoText: string;
-  logoImage?: string;
-  ctaText?: string;
-  ctaLink?: string;
-  transparent: boolean;  // 투명 헤더 여부
-  sticky: boolean;       // 스크롤 시 고정 여부
-}
+사용자가 메인 컬러를 선택하면 HSL 색상 공간에서 팔레트(50~900)를 자동 생성합니다.
 
-// 히어로 섹션
-interface HeroContent {
-  title: string;
-  subtitle: string;
-  description?: string;
-  ctaText: string;
-  ctaLink: string;
-  secondaryCtaText?: string;
-  secondaryCtaLink?: string;
-  backgroundImage?: string;
-  backgroundVideo?: string;
-  overlayOpacity: number;  // 0-100
-  textAlign: 'left' | 'center' | 'right';
-  height: 'full' | 'large' | 'medium';  // 100vh, 80vh, 60vh
-}
+- 선택한 색 = `--primary-500` 기준
+- 50~400: 상대적으로 밝게 (lightness 증가)
+- 600~900: 상대적으로 어둡게 (lightness 감소)
+- 채도가 낮은 색도 최소 채도 보장 (`Math.max(s, 15)`)
+- CSS 변수를 `document.documentElement`에 실시간 적용
 
-// 기능/서비스 섹션
-interface FeaturesContent {
-  title: string;
-  subtitle?: string;
-  items: FeatureItem[];
-  columns: 2 | 3 | 4;
-  style: 'cards' | 'icons' | 'minimal';
-}
+### 5.3 공통 컴포넌트 스타일
 
-interface FeatureItem {
-  icon: string;
-  title: string;
-  description: string;
-}
+`main.css`에 정의된 재사용 가능한 클래스:
 
-// 회사/팀 소개
-interface AboutContent {
-  title: string;
-  subtitle?: string;
-  description: string;
-  image?: string;
-  stats?: StatItem[];
-  layout: 'image-left' | 'image-right' | 'image-top';
-}
-
-interface StatItem {
-  value: string;
-  label: string;
-}
-
-// 갤러리/포트폴리오
-interface GalleryContent {
-  title: string;
-  subtitle?: string;
-  items: GalleryItem[];
-  columns: 2 | 3 | 4;
-  style: 'grid' | 'masonry' | 'slider';
-}
-
-interface GalleryItem {
-  image: string;
-  title?: string;
-  category?: string;
-  link?: string;
-}
-
-// 고객 후기
-interface TestimonialContent {
-  title: string;
-  subtitle?: string;
-  items: TestimonialItem[];
-  style: 'cards' | 'slider' | 'minimal';
-}
-
-interface TestimonialItem {
-  content: string;
-  author: string;
-  role?: string;
-  company?: string;
-  avatar?: string;
-  rating?: number;  // 1-5
-}
-
-// 가격표
-interface PricingContent {
-  title: string;
-  subtitle?: string;
-  plans: PricingPlan[];
-  billingToggle: boolean;  // 월간/연간 토글 표시
-}
-
-interface PricingPlan {
-  name: string;
-  price: string;
-  period: string;  // '월', '년'
-  description?: string;
-  features: string[];
-  ctaText: string;
-  ctaLink: string;
-  highlighted: boolean;  // 추천 플랜
-  yearlyPrice?: string;  // 연간 결제 가격
-}
-
-// 팀 소개
-interface TeamContent {
-  title: string;
-  subtitle?: string;
-  members: TeamMember[];
-  columns: 2 | 3 | 4;
-}
-
-interface TeamMember {
-  name: string;
-  role: string;
-  image?: string;
-  bio?: string;
-  social?: {
-    linkedin?: string;
-    twitter?: string;
-    email?: string;
-  };
-}
-
-// FAQ
-interface FAQContent {
-  title: string;
-  subtitle?: string;
-  items: FAQItem[];
-  style: 'accordion' | 'grid';
-}
-
-interface FAQItem {
-  question: string;
-  answer: string;
-}
-
-// CTA (행동 유도)
-interface CTAContent {
-  title: string;
-  subtitle?: string;
-  ctaText: string;
-  ctaLink: string;
-  secondaryCtaText?: string;
-  secondaryCtaLink?: string;
-  backgroundImage?: string;
-  backgroundColor?: string;
-}
-
-// 연락처
-interface ContactContent {
-  title: string;
-  subtitle?: string;
-  email: string;
-  phone?: string;
-  address?: string;
-  mapEnabled: boolean;
-  mapAddress?: string;
-  formEnabled: boolean;
-  social?: SocialLink[];
-}
-
-interface SocialLink {
-  platform: 'facebook' | 'instagram' | 'twitter' | 'youtube' | 'linkedin';
-  url: string;
-}
-
-// 푸터
-interface FooterContent {
-  copyright: string;
-  links?: { label: string; href: string; }[];
-  social?: SocialLink[];
-}
-```
+| 클래스 | 용도 |
+|--------|------|
+| `.container-custom` | 반응형 컨테이너 (max-width + 패딩) |
+| `.section` / `.section-title` / `.section-subtitle` | 섹션 기본 레이아웃 |
+| `.btn-primary` / `.btn-secondary` | 버튼 스타일 |
+| `.editor-section` / `.editor-label` / `.editor-input` | 에디터 폼 공통 |
+| `.toggle` / `.toggle-slider` | 토글 스위치 |
+| `.option-btn` | 선택 옵션 버튼 (프리셋) |
+| `.color-picker` | 컬러 피커 입력 |
+| `.stack-2` ~ `.stack-6` | 수직 간격 유틸리티 |
+| `.section-item` | 드래그 가능한 섹션 아이템 |
 
 ---
 
-## 6. 템플릿 종류
+## 6. 데이터 모델
 
-### 6.1 Business (비즈니스 랜딩)
+### 6.1 SiteContent (사이트 콘텐츠)
 
-SaaS, 서비스 소개용 원페이지
+```typescript
+type SectionType =
+  | 'header' | 'hero' | 'churchIntro' | 'about'
+  | 'gallery' | 'testimonial' | 'pricing' | 'team'
+  | 'faq' | 'cta' | 'contact' | 'footer'
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│ [Logo]  Features  About  Pricing  Contact        [시작하기] │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│                    "메인 타이틀"                             │
-│                   서브 타이틀 설명                           │
-│                [무료 체험]  [더 알아보기]                    │  ← Hero
-│                                                             │
-├─────────────────────────────────────────────────────────────┤
-│       기능1           기능2           기능3                  │  ← Features
-├─────────────────────────────────────────────────────────────┤
-│   회사 소개                         [이미지]                 │  ← About
-│   100+ 고객  |  50+ 프로젝트  |  99% 만족도                 │
-├─────────────────────────────────────────────────────────────┤
-│   Basic         Pro            Enterprise                   │  ← Pricing
-│   $9/mo        $29/mo          $99/mo                       │
-├─────────────────────────────────────────────────────────────┤
-│   " 고객 후기 내용... "   " 고객 후기 내용... "              │  ← Testimonial
-├─────────────────────────────────────────────────────────────┤
-│       Q: 질문 1?              Q: 질문 2?                    │  ← FAQ
-│       A: 답변 1               A: 답변 2                      │
-├─────────────────────────────────────────────────────────────┤
-│                   지금 바로 시작하세요!                       │  ← CTA
-│                      [무료로 시작하기]                        │
-├─────────────────────────────────────────────────────────────┤
-│   연락처 정보              [문의 폼]                         │  ← Contact
-├─────────────────────────────────────────────────────────────┤
-│   © 2024 Company         [소셜 링크]                        │  ← Footer
-└─────────────────────────────────────────────────────────────┘
+interface SectionConfig {
+  type: SectionType
+  enabled: boolean
+  order: number
+  id: string  // 앵커 링크용
+}
+
+interface GlobalSettings {
+  primaryColor: string  // 메인 컬러 (hex)
+  fontFamily: string
+  logoText: string
+}
 ```
 
-**기본 섹션 구성:**
-1. Header (필수)
-2. Hero (필수)
-3. Features
-4. About
-5. Pricing
-6. Testimonial
-7. FAQ
-8. CTA
-9. Contact
-10. Footer (필수)
+### 6.2 주요 섹션 콘텐츠 타입
 
-### 6.2 Portfolio (포트폴리오)
+```typescript
+interface HeaderContent {
+  logoText: string
+  logoImage?: string
+  sticky: boolean
+  showLogin: boolean
+  loginText: string
+  loginLink: string
+}
 
-개인/에이전시 포트폴리오
+interface HeroContent {
+  title: string
+  subtitle: string
+  description?: string
+  buttonText: string
+  buttonLink: string
+  buttonUseTheme: boolean      // true=테마 컬러, false=직접 선택
+  buttonTextDark: boolean      // 테마 모드 버튼 글자색 (true=검정, false=흰색)
+  buttonBgColor: string        // 직접 선택 모드용
+  buttonTextColor: string      // 직접 선택 모드용
+  buttonBorderRadius: number
+  backgroundImage?: string
+  textAlign: 'left' | 'center' | 'right'
+  height: number
+  dimEnabled: boolean           // 배경 딤 처리
+  dimOpacity: number            // 딤 불투명도 (0~100)
+  textDark: boolean             // 텍스트 색상 (true=검정, false=흰색)
+}
 
-```
-섹션: Header → Hero → About → Gallery → Testimonial → Contact → Footer
-```
-
-### 6.3 Product (제품 런칭)
-
-신제품 출시 랜딩페이지
-
-```
-섹션: Header → Hero → Features → Gallery → Pricing → FAQ → CTA → Footer
-```
-
-### 6.4 Event (이벤트/프로모션)
-
-이벤트, 세일 프로모션
-
-```
-섹션: Header → Hero → Features → CTA → FAQ → Contact → Footer
+interface ChurchIntroContent {
+  title: string
+  subtitle?: string
+  items: { icon: string; title: string; description: string }[]
+  columns: 2 | 3 | 4
+  style: 'cards' | 'icons' | 'minimal'
+}
 ```
 
 ---
 
 ## 7. 에디터 UI 구조
 
-### 7.1 단계별 흐름 (2단계 시스템)
+### 7.1 3단 레이아웃
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  1단계: 템플릿 선택                                              │
-│  └── 4개 템플릿 카드 중 선택                                     │
-├─────────────────────────────────────────────────────────────────┤
-│  2단계: 섹션 편집                                                │
-│  ├── 좌측: 섹션 목록 (드래그앤드롭으로 순서 변경)                 │
-│  ├── 중앙: 실시간 미리보기                                       │
-│  └── 우측: 선택된 섹션 편집 패널                                 │
-└─────────────────────────────────────────────────────────────────┘
-```
-
-### 7.2 템플릿 선택 화면
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│  원페이지 템플릿 선택                                            │
-│  용도에 맞는 템플릿을 선택하세요.                                 │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│   ┌──────────────┐  ┌──────────────┐  ┌──────────────┐         │
-│   │  [미리보기]   │  │  [미리보기]   │  │  [미리보기]   │         │
-│   │              │  │              │  │              │         │
-│   │   Business   │  │  Portfolio   │  │   Product    │         │
-│   │  비즈니스/SaaS │  │  포트폴리오   │  │  제품 런칭    │         │
-│   └──────────────┘  └──────────────┘  └──────────────┘         │
-│                                                                  │
-│   ┌──────────────┐                                              │
-│   │  [미리보기]   │                                              │
-│   │              │                                              │
-│   │    Event     │                                              │
-│   │ 이벤트/프로모션 │                                              │
-│   └──────────────┘                                              │
-│                                                                  │
-└─────────────────────────────────────────────────────────────────┘
-```
-
-### 7.3 섹션 편집 화면
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│ ← 템플릿 선택                           [미리보기] [저장] [내보내기]│
+│ ← 템플릿 선택                           [미리보기] [저장]         │
 ├──────────────────┬─────────────────────────┬────────────────────┤
-│  섹션 구성 (250px) │    실시간 미리보기       │   편집 패널 (350px) │
+│  좌측 패널 (256px) │    실시간 미리보기       │  편집 패널 (384px)  │
 │                   │                         │                    │
-│  ☑ ≡ Header       │  ┌─────────────────┐    │  [Hero 섹션]       │
-│  ☑ ≡ Hero      ←  │  │                 │    │                    │
-│  ☑ ≡ Features     │  │                 │    │  제목:             │
-│  ☑ ≡ About        │  │   원페이지       │    │  [입력 필드]        │
-│  ☐ ≡ Gallery      │  │   미리보기       │    │                    │
-│  ☑ ≡ Pricing      │  │                 │    │  부제목:            │
-│  ☐ ≡ Team         │  │                 │    │  [입력 필드]        │
-│  ☑ ≡ Testimonial  │  │                 │    │                    │
-│  ☑ ≡ FAQ          │  │                 │    │  CTA 버튼:          │
-│  ☑ ≡ CTA          │  │                 │    │  [입력 필드]        │
-│  ☑ ≡ Contact      │  └─────────────────┘    │                    │
-│  ☑ ≡ Footer       │                         │  배경 이미지:        │
-│                   │                         │  [업로드 버튼]       │
-│  ───────────────  │                         │                    │
-│  [+ 섹션 추가]     │                         │                    │
+│  [메인 컬러]       │  ┌─────────────────┐    │  [Hero 섹션 편집]   │
+│  🎨 #03183a       │  │                 │    │                    │
+│  ████████████     │  │                 │    │  배경 이미지:        │
+│  ──────────────   │  │   원페이지       │    │  [업로드/URL]       │
+│  섹션 구성     ←   │  │   미리보기       │    │                    │
+│  ☑ ≡ 헤더         │  │                 │    │  딤 처리: [ON]       │
+│  ☑ ≡ 히어로    ←  │  │                 │    │  불투명도: 30%       │
+│  ☑ ≡ 교회소개     │  │                 │    │                    │
+│  ☑ ≡ 소개         │  │                 │    │  텍스트 색: [흰/검]   │
+│  ☐ ≡ 갤러리       │  │                 │    │  제목/부제목/설명     │
+│  ☑ ≡ 고객후기     │  └─────────────────┘    │                    │
+│  ☑ ≡ 가격표       │                         │  버튼 색:            │
+│  ☐ ≡ 팀소개       │                         │  [테마컬러/직접선택]  │
+│  ☑ ≡ FAQ         │                         │  글자색: [흰/검]      │
+│  ☑ ≡ 연락처       │                         │                    │
+│  ☑ ≡ 푸터         │                         │                    │
 ├──────────────────┴─────────────────────────┴────────────────────┤
-│  활성 섹션: 10개                              [변경사항 저장]      │
+│                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-**기능 설명:**
-- **≡**: 드래그 핸들 (순서 변경)
-- **☑/☐**: 섹션 활성화/비활성화 토글
-- **←**: 현재 선택된 섹션 (편집 중)
+### 7.2 메인 컬러 설정
 
-### 7.4 앵커 네비게이션
+좌측 사이드바 최상단에 위치. 컬러피커로 색상 선택 시:
+1. HSL 기반 팔레트 자동 생성 (50~900, 10단계)
+2. CSS 변수 (`--primary-50` ~ `--primary-900`) 실시간 업데이트
+3. 팔레트 미리보기 바 표시
+4. 모든 컴포넌트에 즉시 반영
 
-원페이지 특성상 헤더의 메뉴는 **같은 페이지 내 섹션으로 스크롤**됩니다.
+### 7.3 히어로 편집기 기능
 
-```typescript
-// 메뉴 아이템 자동 생성
-const generateNavItems = (sections: SectionConfig[]) => {
-  const navLabels: Record<SectionType, string> = {
-    features: '기능',
-    about: '소개',
-    gallery: '갤러리',
-    testimonial: '후기',
-    pricing: '가격',
-    team: '팀',
-    faq: 'FAQ',
-    cta: '',  // 메뉴에 표시 안함
-    contact: '연락처',
-    header: '',
-    hero: '',
-    footer: ''
-  }
-
-  return sections
-    .filter(s => s.enabled && navLabels[s.type])
-    .map(s => ({
-      label: navLabels[s.type],
-      href: `#${s.id}`
-    }))
-}
-```
-
-**클릭 시 동작:**
-```typescript
-const scrollToSection = (sectionId: string) => {
-  const element = document.getElementById(sectionId)
-  if (element) {
-    element.scrollIntoView({ behavior: 'smooth' })
-  }
-}
-```
+| 기능 | 설명 |
+|------|------|
+| 배경 이미지 | 파일 첨부 (Base64) 또는 URL 직접 입력 |
+| 딤 처리 | ON/OFF 토글 + 불투명도 0~100% 슬라이더 |
+| 텍스트 색상 | 흰색/검정 2택 (배경에 따라 선택) |
+| 버튼 배경색 | 테마 컬러 자동 적용 또는 직접 컬러피커 선택 |
+| 버튼 글자색 | 테마 모드: 흰/검 선택, 직접 모드: 컬러피커 |
+| 버튼 모서리 | 슬라이더 + 프리셋 (각진/기본/둥근/원형) |
+| 텍스트 정렬 | 왼쪽/가운데/오른쪽 |
+| 섹션 높이 | 숫자 입력 + 프리셋 (작게/보통/크게) |
 
 ---
 
 ## 8. 개발 단계
 
-### Phase 1: 기본 구조
+### Phase 1: 기본 구조 (완료)
 
-**목표**: 단일 템플릿 + 섹션 편집
+- [x] Nuxt 3 프로젝트 초기화
+- [x] TypeScript 설정
+- [x] Pinia 상태관리 설정
+- [x] 기본 레이아웃 구성
+- [x] 기본 섹션 컴포넌트 (Header, Hero, ChurchIntro, About, Contact, Footer)
+- [x] 에디터 3단 레이아웃
+- [x] 섹션 On/Off 토글
+- [x] 섹션 순서 변경 (vue-draggable-plus)
+- [x] 실시간 미리보기
+- [x] localStorage 저장/불러오기
+- [x] 앵커 네비게이션
+- [x] Tailwind CSS → 순수 CSS 전환
+- [x] CSS Custom Properties 디자인 시스템
+- [x] 메인 컬러 설정 (동적 팔레트 생성)
+- [x] 히어로 편집기 (배경 업로드, 딤, 텍스트색, 버튼 테마/커스텀)
+- [x] 헤더 편집기
+- [x] 교회소개 편집기
 
-- [ ] Nuxt 3 프로젝트 초기화
-- [ ] TypeScript + Tailwind CSS 설정
-- [ ] Pinia 상태관리 설정
-- [ ] 기본 레이아웃 구성
-- [ ] 기본 섹션 컴포넌트 구현 (Header, Hero, Features, About, Contact, Footer)
-- [ ] 어드민 페이지 기본 UI
-- [ ] 섹션 On/Off 토글
-- [ ] 섹션 순서 변경 (vue-draggable-plus)
-- [ ] 콘텐츠 편집 폼 UI
-- [ ] 실시간 미리보기
-- [ ] localStorage 저장/불러오기
-- [ ] 앵커 네비게이션 (스크롤 스파이)
+### Phase 2: 추가 섹션 및 편집기
 
-### Phase 2: 템플릿 확장
+- [ ] AboutSection 편집기
+- [ ] ContactSection 편집기
+- [ ] FooterSection 편집기
+- [ ] GallerySection 구현 + 편집기
+- [ ] TestimonialSection 구현 + 편집기
+- [ ] PricingSection 구현 + 편집기
+- [ ] TeamSection 구현 + 편집기
+- [ ] FAQSection 구현 + 편집기
+- [ ] CTASection 구현 + 편집기
 
-**목표**: 다양한 템플릿 및 섹션
+### Phase 3: 고급 기능
 
-- [ ] 추가 섹션 구현 (Gallery, Testimonial, Pricing, Team, FAQ, CTA)
-- [ ] 템플릿 프리셋 4종 구현
-- [ ] 이미지 업로드 기능
-- [ ] 컬러 테마 변경
 - [ ] 폰트 변경
 - [ ] GSAP 스크롤 애니메이션
+- [ ] 반응형 미리보기 (모바일/태블릿)
+- [ ] 저장/미리보기 버튼 연결
 
-### Phase 3: 백엔드 연동
-
-**목표**: 실제 데이터 저장 및 배포
+### Phase 4: 백엔드 연동
 
 - [ ] MongoDB 연결
 - [ ] API 구현
 - [ ] 이미지 업로드 서버 저장
 - [ ] 사용자 인증
-- [ ] 사이트 발행/배포 기능
-- [ ] 커스텀 도메인 연결
+- [ ] 사이트 발행/배포
 
 ---
 
 ## 9. UI/UX 디자인 가이드
 
-### 디자인 컨셉
-모던하고 미니멀한 랜딩페이지 빌더
-
 ### 컬러 시스템
 
 ```
-Primary (강조색) - 커스터마이징 가능
-├── Default: #3B82F6 (Blue)
-├── Options: Purple, Green, Orange, Red, Teal
+Primary (메인 컬러) - 사용자가 컬러피커로 설정
+├── 50~400: 밝은 변형 (배경, 호버)
+├── 500: 선택한 색 그대로
+├── 600~900: 어두운 변형 (호버, 텍스트)
 
-Neutral (기본색)
-├── White: #FFFFFF (배경)
-├── Gray 50: #F9FAFB (섹션 배경)
-├── Gray 100: #F3F4F6 (카드 배경)
-├── Gray 200: #E5E7EB (보더)
-├── Gray 600: #4B5563 (서브 텍스트)
-├── Gray 900: #111827 (메인 텍스트)
+Neutral (고정)
+├── Gray 50~900: UI 요소용
+├── White: #FFFFFF
+├── Red 500/700: 삭제/에러
 ```
 
 ### 타이포그래피
@@ -663,53 +369,13 @@ Neutral (기본색)
 Font Family: 'Pretendard', -apple-system, sans-serif
 
 Headings
-├── H1: 48px-72px / Bold (Hero 타이틀)
-├── H2: 36px-48px / Bold (섹션 타이틀)
-├── H3: 24px / SemiBold
+├── H1: 2.25~3.75rem / Bold (히어로)
+├── H2: 1.875~2.25rem / Bold (섹션 타이틀)
+├── H3: 1.5rem / SemiBold
 
 Body
-├── Large: 18px / Regular (Hero 설명)
-├── Base: 16px / Regular
-├── Small: 14px / Regular
+├── Large: 1.125rem
+├── Base: 1rem
+├── Small: 0.875rem
+├── XS: 0.75rem (힌트 텍스트)
 ```
-
----
-
-## 10. 에이전트 & 스킬 시스템
-
-### 스킬 목록
-
-| 스킬 | 트리거 | 설명 |
-|------|--------|------|
-| Build | `/build` | 프로젝트 빌드 및 검증 |
-| Test | `/test` | 테스트 실행 |
-| AI Generate | `/ai-generate` | AI 콘텐츠 생성 |
-| AI SEO | `/ai-seo` | SEO 메타 자동 생성 |
-
-### 에이전트 목록
-
-| 에이전트 | 용도 |
-|----------|------|
-| Build Agent | 빌드, 린트, 타입체크 |
-| AI Agent | 콘텐츠 생성, SEO |
-| Test Agent | Unit/E2E 테스트 |
-
----
-
-## 11. 참고 사항
-
-### 단순화 원칙 (homepage_builder와 동일)
-- 복잡한 블록 편집 없음 (섹션 단위 편집)
-- 섹션 내부 레이아웃은 고정 (콘텐츠만 변경)
-
-### 원페이지 특화 기능
-- 섹션 순서 드래그앤드롭
-- 앵커 네비게이션 자동 생성
-- 스크롤 애니메이션
-- 반응형 자동 적용
-
-### 향후 확장 가능
-- AI 콘텐츠 생성
-- A/B 테스트
-- 분석 대시보드
-- 폼 제출 수집

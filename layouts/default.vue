@@ -1,5 +1,11 @@
 <template>
-  <div class="min-h-screen">
+  <div class="default-layout">
     <slot />
   </div>
 </template>
+
+<style scoped>
+.default-layout {
+  min-height: 100vh;
+}
+</style>
