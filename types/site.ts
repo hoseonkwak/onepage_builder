@@ -7,13 +7,11 @@ export type SectionType =
   | 'hero'
   | 'churchIntro'
   | 'worshipInfo'
+  | 'board'
+  | 'newfamilyInfo'
+  | 'youth'
   | 'gallery'
-  | 'testimonial'
-  | 'pricing'
-  | 'team'
-  | 'faq'
-  | 'cta'
-  | 'contact'
+  | 'map'
   | 'footer'
 
 // 섹션 설정
@@ -117,6 +115,73 @@ export interface WorshipInfoContent {
   showDivider: boolean
 }
 
+// 게시판
+export interface BoardItem {
+  title: string
+  date: string
+  author?: string
+  link?: string
+}
+
+export interface BoardContent {
+  title: string
+  subtitle?: string
+  showDivider: boolean
+  items: BoardItem[]
+  backgroundImage?: string
+  dimEnabled: boolean
+  dimOpacity: number
+  textDark: boolean
+  iconUseTheme: boolean
+  iconBgColor: string
+  iconColor: string
+  moreText?: string
+  moreLink?: string
+}
+
+// 새가족안내
+export interface NewFamilyStep {
+  label: string       // "STEP-1"
+  title: string       // "교인등록"
+  subtitle: string    // "새가족 등록카드 작성"
+  description: string // 하단 설명
+  buttonText?: string
+  buttonLink?: string
+  buttonUseTheme: boolean
+  buttonTextDark: boolean
+  buttonBgColor: string
+  buttonTextColor: string
+}
+
+export interface NewFamilyInfoContent {
+  title: string
+  subtitle?: string
+  showDivider: boolean
+  steps: NewFamilyStep[]
+  columns: 2 | 3 | 4
+}
+
+// 교회학교
+export interface YouthDept {
+  name: string
+  description: string
+  image?: string
+  buttonText?: string
+  buttonLink?: string
+  buttonUseTheme: boolean
+  buttonTextDark: boolean
+  buttonBgColor: string
+  buttonTextColor: string
+}
+
+export interface YouthContent {
+  title: string
+  subtitle?: string
+  showDivider: boolean
+  departments: YouthDept[]
+  columns: 1 | 2 | 3
+}
+
 // 갤러리
 export interface GalleryItem {
   image: string
@@ -128,104 +193,21 @@ export interface GalleryItem {
 export interface GalleryContent {
   title: string
   subtitle?: string
+  showDivider: boolean
   items: GalleryItem[]
   columns: 2 | 3 | 4
   style: 'grid' | 'masonry' | 'slider'
 }
 
-// 고객 후기
-export interface TestimonialItem {
-  content: string
-  author: string
-  role?: string
-  company?: string
-  avatar?: string
-  rating?: number
-}
-
-export interface TestimonialContent {
+// 지도
+export interface MapContent {
   title: string
   subtitle?: string
-  items: TestimonialItem[]
-  style: 'cards' | 'slider' | 'minimal'
-}
-
-// 가격표
-export interface PricingPlan {
-  name: string
-  price: string
-  period: string
-  description?: string
-  features: string[]
-  ctaText: string
-  ctaLink: string
-  highlighted: boolean
-  yearlyPrice?: string
-}
-
-export interface PricingContent {
-  title: string
-  subtitle?: string
-  plans: PricingPlan[]
-  billingToggle: boolean
-}
-
-// 팀 소개
-export interface TeamMember {
-  name: string
-  role: string
-  image?: string
-  bio?: string
-  social?: {
-    linkedin?: string
-    twitter?: string
-    email?: string
-  }
-}
-
-export interface TeamContent {
-  title: string
-  subtitle?: string
-  members: TeamMember[]
-  columns: 2 | 3 | 4
-}
-
-// FAQ
-export interface FAQItem {
-  question: string
-  answer: string
-}
-
-export interface FAQContent {
-  title: string
-  subtitle?: string
-  items: FAQItem[]
-  style: 'accordion' | 'grid'
-}
-
-// CTA
-export interface CTAContent {
-  title: string
-  subtitle?: string
-  ctaText: string
-  ctaLink: string
-  secondaryCtaText?: string
-  secondaryCtaLink?: string
-  backgroundImage?: string
-  backgroundColor?: string
-}
-
-// 연락처
-export interface ContactContent {
-  title: string
-  subtitle?: string
-  email: string
+  showDivider: boolean
+  address: string
   phone?: string
-  address?: string
-  mapEnabled: boolean
-  mapAddress?: string
-  formEnabled: boolean
-  social?: SocialLink[]
+  embedUrl?: string
+  height: number
 }
 
 // 푸터
@@ -243,13 +225,11 @@ export interface SiteContent {
   hero: HeroContent
   churchIntro: ChurchIntroContent
   worshipInfo: WorshipInfoContent
+  board: BoardContent
+  newfamilyInfo: NewFamilyInfoContent
+  youth: YouthContent
   gallery: GalleryContent
-  testimonial: TestimonialContent
-  pricing: PricingContent
-  team: TeamContent
-  faq: FAQContent
-  cta: CTAContent
-  contact: ContactContent
+  map: MapContent
   footer: FooterContent
   settings: GlobalSettings
 }

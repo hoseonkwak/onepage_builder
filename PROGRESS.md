@@ -2,7 +2,7 @@
 
 ## 프로젝트 개요
 
-원페이지(One-Page) 전용 템플릿 빌더. 사용자가 미리 정의된 템플릿에서 섹션 순서를 변경하고, 텍스트와 이미지를 교체하여 랜딩페이지를 완성할 수 있는 도구.
+원페이지(One-Page) 전용 템플릿 빌더. 교회 홈페이지용 원페이지를 섹션 단위로 구성하고, 텍스트/이미지/스타일을 편집하여 완성할 수 있는 도구.
 
 ## 기술 스택
 
@@ -19,37 +19,27 @@
 
 ## 완료된 작업
 
-### 1. 프로젝트 초기 설정
+### 1. 프로젝트 기반
 
 | 항목 | 상태 |
 |------|------|
-| Nuxt 3 프로젝트 구조 설정 | 완료 |
-| TypeScript 설정 | 완료 |
-| Pinia 상태관리 설정 | 완료 |
-| nuxt-icon 모듈 설치 및 설정 | 완료 |
+| Nuxt 3 + TypeScript + Pinia 설정 | 완료 |
 | GitHub 원격 저장소 연결 | 완료 |
-
-### 2. 스타일링 시스템
-
-| 항목 | 상태 |
-|------|------|
 | Tailwind CSS → 순수 CSS 전환 | 완료 |
 | CSS Custom Properties 디자인 시스템 | 완료 |
-| 공통 컴포넌트 스타일 (버튼, 에디터, 토글 등) | 완료 |
 | 공통 섹션 헤더 (`.section-header`, `.section-divider`) | 완료 |
-| 모든 .vue 파일 scoped CSS로 전환 | 완료 |
 
-### 3. 메인 컬러 시스템
+### 2. 메인 컬러 시스템
 
 | 항목 | 상태 |
 |------|------|
-| `useThemeColor` composable 구현 | 완료 |
-| HSL 기반 팔레트 자동 생성 (선택 색 = 500 기준) | 완료 |
+| `useThemeColor` composable | 완료 |
+| HSL 기반 팔레트 생성 (선택 색 = 500 기준) | 완료 |
 | 어두운/채도 낮은 색 보정 | 완료 |
 | CSS 변수 실시간 업데이트 | 완료 |
-| 좌측 사이드바 컬러피커 + 팔레트 미리보기 | 완료 |
+| 사이드바 컬러피커 + 팔레트 미리보기 | 완료 |
 
-### 4. 에디터 UI
+### 3. 에디터 레이아웃
 
 | 항목 | 상태 |
 |------|------|
@@ -57,58 +47,56 @@
 | 템플릿 선택 화면 (Type 1~3) | 완료 |
 | 섹션 On/Off 토글 | 완료 |
 | 섹션 순서 변경 (vue-draggable-plus) | 완료 |
-| 섹션 선택 시 하이라이트 표시 | 완료 |
+| 섹션 선택 시 하이라이트 | 완료 |
 | 섹션별 배경색 설정 (프리셋 3종 + 커스텀, 헤더/히어로 제외) | 완료 |
 
-### 5. 섹션 컴포넌트
+### 4. 섹션 구성
 
-| 섹션 | 파일명 | 설명 | 상태 |
-|------|--------|------|------|
+| 섹션 | 파일 | 설명 | 상태 |
+|------|------|------|------|
 | 헤더 | HeaderSection.vue | 네비게이션, 모바일 메뉴, 로그인 | 완료 |
 | 히어로 | HeroSection.vue | 배경 이미지/딤, 텍스트/버튼 커스텀 | 완료 |
-| 교회소개 | ChurchIntroSection.vue | 카드/아이콘/미니멀 스타일, 그림자, 아이콘 색상 | 완료 |
-| 예배안내 | WorshipInfoSection.vue | 아이콘+텍스트 가로 배치, 구분선 | 완료 |
-| 연락처 | ContactSection.vue | 연락처 정보 + 문의 폼 | 완료 |
+| 교회소개 | ChurchIntroSection.vue | 카드/아이콘/미니멀 스타일, 그림자, 아이콘 색 | 완료 |
+| 예배안내 | WorshipInfoSection.vue | 아이콘+텍스트 가로 배치 | 완료 |
+| 게시판 | BoardSection.vue | 주보형 카드 3개, 배경 이미지/딤/아이콘색/더보기 버튼 | 완료 |
+| 새가족안내 | NewFamilyInfoSection.vue | STEP 카드, 각 카드 버튼 색 커스텀 | 완료 |
+| 교회학교 | YouthSection.vue | 좌측 텍스트+우측 이미지 카드, 부서별 버튼 | 완료 |
+| 갤러리 | GallerySection.vue | 이미지 그리드, 클릭 시 모달 뷰어 (좌/우/ESC) | 완료 |
+| 지도 | MapSection.vue | 주소/전화 + 지도 embed | 완료 |
 | 푸터 | FooterSection.vue | 저작권, 링크, 소셜 | 완료 |
 
-### 6. 섹션 편집기
+### 5. 편집기
 
 | 편집기 | 편집 가능 항목 | 상태 |
 |--------|---------------|------|
 | HeaderEditor | 로고, 로그인, 상단 고정 | 완료 |
-| HeroEditor | 배경(파일/URL), 딤(토글/불투명도), 텍스트(흰/검), 버튼(테마/커스텀 + 글자색), 정렬, 높이 | 완료 |
-| ChurchIntroEditor | 제목/부제목/구분선, 레이아웃(컬럼/스타일), 카드 배경색, 카드 그림자(프리셋+방향+커스텀), 아이콘 색상(테마/커스텀), 항목 관리(IconPicker) | 완료 |
-| WorshipInfoEditor | 제목/부제목/구분선, 컬럼 수, 배경색, 아이콘 색상(테마/커스텀), 항목 관리(IconPicker) | 완료 |
+| HeroEditor | 배경(파일/URL), 딤, 텍스트(흰/검), 버튼(테마/커스텀+글자색), 정렬, 높이 | 완료 |
+| ChurchIntroEditor | 제목/구분선, 레이아웃, 카드 배경/그림자(프리셋+방향+커스텀), 아이콘 색(테마/커스텀), 항목 관리 | 완료 |
+| WorshipInfoEditor | 제목/구분선, 컬럼 수, 배경색, 아이콘 색(테마/커스텀), 항목 관리 | 완료 |
+| BoardEditor | 배경(파일/URL), 딤, 제목 색(흰/검), 아이콘 색(테마/커스텀), 게시글, 더보기 버튼 | 완료 |
+| NewFamilyInfoEditor | 제목/구분선, 컬럼 수, STEP 편집(라벨/제목/부제목/설명/버튼 테마·커스텀·글자색) | 완료 |
+| YouthEditor | 제목/구분선, 컬럼 수, 부서 편집(이름/설명/이미지 업로드/버튼 테마·커스텀) | 완료 |
+| GalleryEditor | 제목/구분선, 컬럼 수, 이미지 다중 업로드/URL 추가/삭제 | 완료 |
 
-### 7. 공통 컴포넌트
+### 6. 공통 컴포넌트
 
 | 컴포넌트 | 설명 | 상태 |
 |----------|------|------|
-| IconPicker | 아이콘 선택 UI (카테고리별 분류, 검색, 100+개 아이콘) | 완료 |
+| IconPicker | 아이콘 선택 UI (카테고리 7종, 100+개 아이콘, 검색) | 완료 |
 
-### 8. 데이터 관리
+### 7. 데이터 관리
 
 | 항목 | 상태 |
 |------|------|
-| Pinia store (`stores/site.ts`) | 완료 |
+| Pinia store | 완료 |
 | localStorage 저장/불러오기 | 완료 |
-| 기본 콘텐츠 데이터 설정 | 완료 |
 | 데이터 마이그레이션 (기존 데이터 호환) | 완료 |
 
 ## 현재 파일 구조
 
 ```
 onepage_builder/
-├── nuxt.config.ts
-├── package.json
-├── tsconfig.json
-├── DESIGN.md
-├── PROGRESS.md
-├── README.md
-│
-├── assets/
-│   └── css/
-│       └── main.css              # 글로벌 스타일 (CSS 변수, 공통 컴포넌트)
+├── assets/css/main.css           # 글로벌 CSS (변수, 공통 스타일)
 │
 ├── components/
 │   ├── sections/
@@ -116,7 +104,11 @@ onepage_builder/
 │   │   ├── HeroSection.vue
 │   │   ├── ChurchIntroSection.vue
 │   │   ├── WorshipInfoSection.vue
-│   │   ├── ContactSection.vue
+│   │   ├── BoardSection.vue
+│   │   ├── NewFamilyInfoSection.vue
+│   │   ├── YouthSection.vue
+│   │   ├── GallerySection.vue
+│   │   ├── MapSection.vue
 │   │   └── FooterSection.vue
 │   │
 │   └── editors/
@@ -124,33 +116,27 @@ onepage_builder/
 │       ├── HeroEditor.vue
 │       ├── ChurchIntroEditor.vue
 │       ├── WorshipInfoEditor.vue
-│       └── IconPicker.vue        # 아이콘 선택 공통 컴포넌트
+│       ├── BoardEditor.vue
+│       ├── NewFamilyInfoEditor.vue
+│       ├── YouthEditor.vue
+│       ├── GalleryEditor.vue
+│       └── IconPicker.vue
 │
 ├── composables/
-│   └── useThemeColor.ts          # 테마 컬러 팔레트 생성
+│   └── useThemeColor.ts
 │
-├── layouts/
-│   ├── default.vue
-│   └── admin.vue
-│
-├── pages/
-│   ├── index.vue                 # 에디터 (메인)
-│   └── preview.vue               # 미리보기
-│
-├── stores/
-│   └── site.ts
-│
-└── types/
-    └── site.ts
+├── layouts/ (default, admin)
+├── pages/ (index, preview)
+├── stores/site.ts
+└── types/site.ts
 ```
 
 ## 실행 방법
 
-| 단계 | 명령어 |
-|------|--------|
-| 의존성 설치 | `npm install` |
-| 개발 서버 실행 | `npm run dev` |
-| 브라우저 접속 | http://localhost:3000 |
+```bash
+npm install
+npm run dev   # http://localhost:3000
+```
 
 ## 남은 작업 (TODO)
 
@@ -158,23 +144,12 @@ onepage_builder/
 
 | 항목 | 상태 |
 |------|------|
-| ContactSection 편집기 | 미완료 |
-| FooterSection 편집기 | 미완료 |
+| MapEditor (지도 편집) | 미완료 |
+| FooterEditor (푸터 편집) | 미완료 |
 | 저장 버튼 기능 연결 | 미완료 |
 | 미리보기 버튼 → `/preview` 연결 | 미완료 |
 
-### Phase 2: 추가 섹션
-
-| 섹션 | 상태 |
-|------|------|
-| GallerySection + 편집기 | 미완료 |
-| TestimonialSection + 편집기 | 미완료 |
-| PricingSection + 편집기 | 미완료 |
-| TeamSection + 편집기 | 미완료 |
-| FAQSection + 편집기 | 미완료 |
-| CTASection + 편집기 | 미완료 |
-
-### Phase 3: 고급 기능
+### Phase 2: 고급 기능
 
 | 항목 | 상태 |
 |------|------|
@@ -182,7 +157,7 @@ onepage_builder/
 | GSAP 스크롤 애니메이션 | 미완료 |
 | 반응형 미리보기 (모바일/태블릿) | 미완료 |
 
-### Phase 4: 백엔드 연동
+### Phase 3: 백엔드 연동
 
 | 항목 | 상태 |
 |------|------|
@@ -196,14 +171,19 @@ onepage_builder/
 
 | 날짜 | 내용 |
 |------|------|
-| 2025-01-16 | 프로젝트 초기 설정, 에디터 페이지 구현 |
+| 2025-01-16 | 프로젝트 초기 설정, 에디터 페이지 |
 | 2025-01-21 | HeaderEditor, HeroEditor 구현 |
 | 2026-04-16 | Tailwind CSS → 순수 CSS 전환 |
 | 2026-04-16 | 메인 컬러 시스템 (useThemeColor, 동적 팔레트) |
 | 2026-04-16 | 히어로: 배경 업로드, 딤, 텍스트색, 버튼 테마/커스텀 + 글자색 |
 | 2026-04-16 | ChurchIntroEditor (아이콘색, 카드배경, 그림자 프리셋+방향+커스텀) |
 | 2026-04-16 | IconPicker 공통 컴포넌트 (카테고리별 100+개 아이콘) |
-| 2026-04-16 | about → worshipInfo 리네이밍 |
-| 2026-04-16 | WorshipInfoSection + WorshipInfoEditor 구현 (예배안내) |
+| 2026-04-16 | about → worshipInfo 리네이밍, 예배안내 디자인 구현 |
 | 2026-04-16 | 공통 섹션 헤더/구분선 (section-header, section-divider) |
-| 2026-04-16 | 섹션별 배경색 설정 (프리셋 3종 + 커스텀, 헤더/히어로 제외) |
+| 2026-04-16 | 섹션별 배경색 설정 (프리셋 + 커스텀, 헤더/히어로 제외) |
+| 2026-04-17 | 섹션 구성 재편: board/newfamilyInfo/youth/gallery/map/footer |
+| 2026-04-17 | 게시판(카드형, 배경/딤/아이콘색/더보기) 구현 |
+| 2026-04-17 | 새가족안내 STEP 카드 (라벨/제목/부제목/설명/버튼 색 커스텀) |
+| 2026-04-17 | 교회학교 (좌측 텍스트 + 우측 이미지, 버튼 커스텀) |
+| 2026-04-17 | 갤러리 (그리드 + 모달 뷰어, 다중 이미지 업로드) |
+| 2026-04-17 | 지도 (주소/전화 + embed URL) |

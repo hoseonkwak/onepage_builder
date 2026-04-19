@@ -8,7 +8,11 @@ import type {
   HeaderContent,
   HeroContent,
   ChurchIntroContent,
-  WorshipInfoContent
+  WorshipInfoContent,
+  BoardContent,
+  NewFamilyInfoContent,
+  YouthContent,
+  GalleryContent
 } from '~/types/site'
 
 // 섹션 라벨 맵
@@ -16,14 +20,12 @@ const sectionLabels: Record<SectionType, string> = {
   header: '헤더',
   hero: '히어로',
   churchIntro: '교회소개',
-  worshipInfo: '소개',
+  worshipInfo: '예배안내',
+  board: '게시판',
+  newfamilyInfo: '새가족안내',
+  youth: '교회학교',
   gallery: '갤러리',
-  testimonial: '고객후기',
-  pricing: '가격표',
-  team: '팀 소개',
-  faq: 'FAQ',
-  cta: 'CTA',
-  contact: '연락처',
+  map: '지도',
   footer: '푸터'
 }
 
@@ -31,12 +33,11 @@ const sectionLabels: Record<SectionType, string> = {
 const navSections: SectionType[] = [
   'churchIntro',
   'worshipInfo',
+  'board',
+  'newfamilyInfo',
+  'youth',
   'gallery',
-  'testimonial',
-  'pricing',
-  'team',
-  'faq',
-  'contact'
+  'map'
 ]
 
 // 기본 사이트 콘텐츠
@@ -47,14 +48,12 @@ const getDefaultContent = (): SiteContent => ({
     { type: 'hero', enabled: true, order: 1, id: 'hero', useBgColor: false, bgColor: '#ffffff' },
     { type: 'churchIntro', enabled: true, order: 2, id: 'churchIntro', useBgColor: false, bgColor: '#ffffff' },
     { type: 'worshipInfo', enabled: true, order: 3, id: 'worshipInfo', useBgColor: true, bgColor: '#f3f4f6' },
-    // { type: 'gallery', enabled: false, order: 4, id: 'gallery' },
-    // { type: 'testimonial', enabled: true, order: 5, id: 'testimonial' },
-    // { type: 'pricing', enabled: true, order: 6, id: 'pricing' },
-    // { type: 'team', enabled: false, order: 7, id: 'team' },
-    // { type: 'faq', enabled: true, order: 8, id: 'faq' },
-    // { type: 'cta', enabled: true, order: 9, id: 'cta' },
-    // { type: 'contact', enabled: true, order: 10, id: 'contact' },
-    // { type: 'footer', enabled: true, order: 11, id: 'footer' }
+    { type: 'board', enabled: true, order: 4, id: 'board', useBgColor: false, bgColor: '#ffffff' },
+    { type: 'newfamilyInfo', enabled: true, order: 5, id: 'newfamilyInfo', useBgColor: true, bgColor: '#f9fafb' },
+    { type: 'youth', enabled: true, order: 6, id: 'youth', useBgColor: false, bgColor: '#ffffff' },
+    { type: 'gallery', enabled: true, order: 7, id: 'gallery', useBgColor: true, bgColor: '#f9fafb' },
+    { type: 'map', enabled: true, order: 8, id: 'map', useBgColor: false, bgColor: '#ffffff' },
+    { type: 'footer', enabled: true, order: 9, id: 'footer', useBgColor: false, bgColor: '#ffffff' }
   ],
   header: {
     logoText: 'Brand',
@@ -119,99 +118,65 @@ const getDefaultContent = (): SiteContent => ({
     bgColor: '#f3f4f6',
     showDivider: true
   },
+  board: {
+    title: '주보 게시판',
+    subtitle: '금주의 주보를 확인해보세요.',
+    showDivider: true,
+    items: [
+      { title: '[55-35] 2025년 8월 31일 주보', date: '2025-08-31 09:50:46', author: '김현' },
+      { title: '[55-34] 2025년 8월 24일 주보', date: '2025-08-23 10:44:10', author: '김현' },
+      { title: '[55-33] 2025년 8월 17일 주보', date: '2025-08-20 10:09:15', author: '김현' }
+    ],
+    backgroundImage: '',
+    dimEnabled: true,
+    dimOpacity: 50,
+    textDark: false,
+    iconUseTheme: true,
+    iconBgColor: '#1d4ed8',
+    iconColor: '#ffffff',
+    moreText: '주보 더보기',
+    moreLink: '#'
+  },
+  newfamilyInfo: {
+    title: '새가족안내',
+    subtitle: '새가족등록방법 안내',
+    showDivider: true,
+    steps: [
+      { label: 'STEP-1', title: '교인등록', subtitle: '새가족 등록카드 작성', description: '새가족부의 안내에 따라 등록해 주시면 됩니다.', buttonText: '등록카드 작성', buttonLink: '#', buttonUseTheme: false, buttonTextDark: false, buttonBgColor: '#111827', buttonTextColor: '#ffffff' },
+      { label: 'STEP-2', title: '대면심방', subtitle: '1시간 소요', description: '은천제일교회에 새로 등록하신 분들은 담임목사와 면담이 있습니다.', buttonUseTheme: false, buttonTextDark: false, buttonBgColor: '#111827', buttonTextColor: '#ffffff' },
+      { label: 'STEP-3', title: '양육', subtitle: '5주과정', description: '5주과정의 새가족양육을 시간을 맞추어 함께 받습니다.', buttonUseTheme: false, buttonTextDark: false, buttonBgColor: '#111827', buttonTextColor: '#ffffff' },
+      { label: 'STEP-4', title: '구역연결', subtitle: '구역장 배정', description: '양육 후에 구역으로 배정받습니다.', buttonUseTheme: false, buttonTextDark: false, buttonBgColor: '#111827', buttonTextColor: '#ffffff' }
+    ],
+    columns: 4
+  },
+  youth: {
+    title: '교회학교',
+    subtitle: '은혜로 천국을 사는 교회학교',
+    showDivider: true,
+    departments: [
+      { name: '영유아부', description: '하나님 나라를 꿈꾸는 영유아부', image: '', buttonText: '영유아부 SNS', buttonLink: '#', buttonUseTheme: false, buttonTextDark: false, buttonBgColor: '#1e3a8a', buttonTextColor: '#ffffff' },
+      { name: '유초등부', description: '하나님 나라를 배우며 성장하는 유초등부', image: '', buttonText: '유초등부 SNS', buttonLink: '#', buttonUseTheme: false, buttonTextDark: false, buttonBgColor: '#1e3a8a', buttonTextColor: '#ffffff' },
+      { name: '중고등부', description: '말씀으로 세상을 바라보는 중고등부', image: '', buttonText: '중고등부 SNS', buttonLink: '#', buttonUseTheme: false, buttonTextDark: false, buttonBgColor: '#1e3a8a', buttonTextColor: '#ffffff' },
+      { name: '청년부', description: '참된 예배자로 세상을 변혁시켜가는 청년부', image: '', buttonText: '청년부 SNS', buttonLink: '#', buttonUseTheme: false, buttonTextDark: false, buttonBgColor: '#1e3a8a', buttonTextColor: '#ffffff' }
+    ],
+    columns: 2
+  },
   gallery: {
-    title: '포트폴리오',
-    subtitle: '우리의 작업을 확인하세요',
+    title: '갤러리',
+    subtitle: '교회의 다양한 모습을 확인하세요',
+    showDivider: true,
     items: [],
     columns: 3,
     style: 'grid'
   },
-  testimonial: {
-    title: '고객 후기',
-    subtitle: '고객들이 말하는 우리 서비스',
-    items: [
-      {
-        content: '정말 훌륭한 서비스입니다. 비즈니스 성장에 큰 도움이 되었습니다.',
-        author: '김철수',
-        role: 'CEO',
-        company: 'ABC Company',
-        rating: 5
-      },
-      {
-        content: '전문적이고 친절한 팀 덕분에 프로젝트를 성공적으로 완료했습니다.',
-        author: '이영희',
-        role: 'Marketing Director',
-        company: 'XYZ Corp',
-        rating: 5
-      }
-    ],
-    style: 'cards'
-  },
-  pricing: {
-    title: '가격 안내',
-    subtitle: '비즈니스에 맞는 플랜을 선택하세요',
-    plans: [
-      {
-        name: 'Basic',
-        price: '29,000',
-        period: '월',
-        features: ['기본 기능', '이메일 지원', '5GB 저장공간'],
-        ctaText: '시작하기',
-        ctaLink: '#contact',
-        highlighted: false
-      },
-      {
-        name: 'Pro',
-        price: '59,000',
-        period: '월',
-        features: ['모든 기능', '우선 지원', '50GB 저장공간', 'API 접근'],
-        ctaText: '시작하기',
-        ctaLink: '#contact',
-        highlighted: true
-      },
-      {
-        name: 'Enterprise',
-        price: '문의',
-        period: '',
-        features: ['맞춤 기능', '전담 매니저', '무제한 저장공간', 'SLA 보장'],
-        ctaText: '문의하기',
-        ctaLink: '#contact',
-        highlighted: false
-      }
-    ],
-    billingToggle: false
-  },
-  team: {
-    title: '팀 소개',
-    subtitle: '열정적인 전문가들이 함께합니다',
-    members: [],
-    columns: 3
-  },
-  faq: {
-    title: '자주 묻는 질문',
-    subtitle: '궁금한 점이 있으신가요?',
-    items: [
-      { question: '무료 체험이 가능한가요?', answer: '네, 14일 무료 체험을 제공합니다.' },
-      { question: '결제 방법은 무엇인가요?', answer: '신용카드, 계좌이체, 페이팔 등 다양한 결제 수단을 지원합니다.' },
-      { question: '환불 정책은 어떻게 되나요?', answer: '구매 후 7일 이내 100% 환불이 가능합니다.' }
-    ],
-    style: 'accordion'
-  },
-  cta: {
-    title: '지금 바로 시작하세요',
-    subtitle: '14일 무료 체험으로 모든 기능을 경험해보세요',
-    ctaText: '무료로 시작하기',
-    ctaLink: '#contact',
-    backgroundColor: '#3b82f6'
-  },
-  contact: {
-    title: '문의하기',
-    subtitle: '궁금한 점이 있으시면 언제든 연락주세요',
-    email: 'contact@example.com',
-    phone: '02-1234-5678',
+  map: {
+    title: '오시는 길',
+    subtitle: '교회 위치 및 연락처',
+    showDivider: true,
     address: '서울시 강남구 테헤란로 123',
-    mapEnabled: false,
-    formEnabled: true
+    phone: '02-1234-5678',
+    embedUrl: '',
+    height: 400
   },
   footer: {
     copyright: '© 2024 Brand. All rights reserved.',
@@ -337,6 +302,30 @@ export const useSiteStore = defineStore('site', {
       this.isDirty = true
     },
 
+    // 게시판 콘텐츠 업데이트
+    updateBoard(content: BoardContent) {
+      this.content.board = content
+      this.isDirty = true
+    },
+
+    // 새가족안내 콘텐츠 업데이트
+    updateNewFamilyInfo(content: NewFamilyInfoContent) {
+      this.content.newfamilyInfo = content
+      this.isDirty = true
+    },
+
+    // 교회학교 콘텐츠 업데이트
+    updateYouth(content: YouthContent) {
+      this.content.youth = content
+      this.isDirty = true
+    },
+
+    // 갤러리 콘텐츠 업데이트
+    updateGallery(content: GalleryContent) {
+      this.content.gallery = content
+      this.isDirty = true
+    },
+
     // 섹션 콘텐츠 업데이트
     updateSectionContent<K extends keyof SiteContent>(
       sectionKey: K,
@@ -390,7 +379,11 @@ export const useSiteStore = defineStore('site', {
               hero: { ...defaults.hero, ...parsed.hero },
               churchIntro: { ...defaults.churchIntro, ...parsed.churchIntro },
               worshipInfo: { ...defaults.worshipInfo, ...parsed.worshipInfo },
-              contact: { ...defaults.contact, ...parsed.contact },
+              board: { ...defaults.board, ...parsed.board },
+              newfamilyInfo: { ...defaults.newfamilyInfo, ...parsed.newfamilyInfo },
+              youth: { ...defaults.youth, ...parsed.youth },
+              gallery: { ...defaults.gallery, ...parsed.gallery },
+              map: { ...defaults.map, ...parsed.map },
               footer: { ...defaults.footer, ...parsed.footer },
               settings: { ...defaults.settings, ...parsed.settings }
             }

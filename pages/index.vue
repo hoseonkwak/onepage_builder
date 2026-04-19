@@ -260,6 +260,30 @@
                 @update="updateWorshipInfoContent"
               />
 
+              <BoardEditor
+                v-else-if="selectedSection === 'board'"
+                :content="siteStore.content.board"
+                @update="updateBoardContent"
+              />
+
+              <NewFamilyInfoEditor
+                v-else-if="selectedSection === 'newfamilyInfo'"
+                :content="siteStore.content.newfamilyInfo"
+                @update="updateNewFamilyContent"
+              />
+
+              <YouthEditor
+                v-else-if="selectedSection === 'youth'"
+                :content="siteStore.content.youth"
+                @update="updateYouthContent"
+              />
+
+              <GalleryEditor
+                v-else-if="selectedSection === 'gallery'"
+                :content="siteStore.content.gallery"
+                @update="updateGalleryContent"
+              />
+
               <p v-else class="editor-panel__placeholder">
                 편집 패널이 여기에 표시됩니다.
               </p>
@@ -280,7 +304,7 @@
 <script setup lang="ts">
 import { VueDraggable } from 'vue-draggable-plus'
 import { useSiteStore, type BuilderTemplateType } from '~/stores/site'
-import type { SectionType, SectionConfig, HeaderContent, HeroContent, ChurchIntroContent, WorshipInfoContent } from '~/types/site'
+import type { SectionType, SectionConfig, HeaderContent, HeroContent, ChurchIntroContent, WorshipInfoContent, BoardContent, NewFamilyInfoContent, YouthContent, GalleryContent } from '~/types/site'
 import { useThemeColor } from '~/composables/useThemeColor'
 
 // Section Components
@@ -288,7 +312,11 @@ import HeaderSection from '~/components/sections/HeaderSection.vue'
 import HeroSection from '~/components/sections/HeroSection.vue'
 import ChurchIntroSection from '~/components/sections/ChurchIntroSection.vue'
 import WorshipInfoSection from '~/components/sections/WorshipInfoSection.vue'
-import ContactSection from '~/components/sections/ContactSection.vue'
+import BoardSection from '~/components/sections/BoardSection.vue'
+import NewFamilyInfoSection from '~/components/sections/NewFamilyInfoSection.vue'
+import YouthSection from '~/components/sections/YouthSection.vue'
+import GallerySection from '~/components/sections/GallerySection.vue'
+import MapSection from '~/components/sections/MapSection.vue'
 import FooterSection from '~/components/sections/FooterSection.vue'
 
 // Editor Components
@@ -296,6 +324,10 @@ import HeaderEditor from '~/components/editors/HeaderEditor.vue'
 import HeroEditor from '~/components/editors/HeroEditor.vue'
 import ChurchIntroEditor from '~/components/editors/ChurchIntroEditor.vue'
 import WorshipInfoEditor from '~/components/editors/WorshipInfoEditor.vue'
+import BoardEditor from '~/components/editors/BoardEditor.vue'
+import NewFamilyInfoEditor from '~/components/editors/NewFamilyInfoEditor.vue'
+import YouthEditor from '~/components/editors/YouthEditor.vue'
+import GalleryEditor from '~/components/editors/GalleryEditor.vue'
 
 definePageMeta({
   layout: false
@@ -440,7 +472,11 @@ const sectionComponents: Record<string, any> = {
   hero: HeroSection,
   churchIntro: ChurchIntroSection,
   worshipInfo: WorshipInfoSection,
-  contact: ContactSection,
+  board: BoardSection,
+  newfamilyInfo: NewFamilyInfoSection,
+  youth: YouthSection,
+  gallery: GallerySection,
+  map: MapSection,
   footer: FooterSection
 }
 
@@ -466,6 +502,22 @@ const updateChurchIntroContent = (content: ChurchIntroContent) => {
 
 const updateWorshipInfoContent = (content: WorshipInfoContent) => {
   siteStore.updateWorshipInfo(content)
+}
+
+const updateBoardContent = (content: BoardContent) => {
+  siteStore.updateBoard(content)
+}
+
+const updateNewFamilyContent = (content: NewFamilyInfoContent) => {
+  siteStore.updateNewFamilyInfo(content)
+}
+
+const updateYouthContent = (content: YouthContent) => {
+  siteStore.updateYouth(content)
+}
+
+const updateGalleryContent = (content: GalleryContent) => {
+  siteStore.updateGallery(content)
 }
 </script>
 

@@ -65,7 +65,7 @@ const formatDesc = (text: string) => {
 .worship__item {
   display: flex;
   align-items: flex-start;
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
 .worship__icon {
@@ -100,5 +100,5 @@ const formatDesc = (text: string) => {
   line-height: 1.8;
 }
 
-.icon-28 { width: 1.75rem; height: 1.75rem; }
+.icon-28 { width: 46px; height: 46px; }
 </style>
