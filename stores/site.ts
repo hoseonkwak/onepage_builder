@@ -12,7 +12,9 @@ import type {
   BoardContent,
   NewFamilyInfoContent,
   YouthContent,
-  GalleryContent
+  GalleryContent,
+  MapContent,
+  FooterContent
 } from '~/types/site'
 
 // 섹션 라벨 맵
@@ -170,26 +172,25 @@ const getDefaultContent = (): SiteContent => ({
     style: 'grid'
   },
   map: {
-    title: '오시는 길',
-    subtitle: '교회 위치 및 연락처',
-    showDivider: true,
-    address: '서울시 강남구 테헤란로 123',
-    phone: '02-1234-5678',
-    embedUrl: '',
-    height: 400
+    address: '서울특별시 관악구 신림로 340',
+    height: 450
   },
   footer: {
-    copyright: '© 2024 Brand. All rights reserved.',
+    address: '서울시 관악구 국회단지길 14',
+    socialUseTheme: false,
+    socialBgColor: '#111827',
+    socialIconColor: '#ffffff',
     social: [
-      { platform: 'facebook', url: '#' },
+      { platform: 'youtube', url: '#' },
       { platform: 'instagram', url: '#' },
-      { platform: 'twitter', url: '#' }
+      { platform: 'facebook', url: '#' }
     ]
   },
   settings: {
     primaryColor: '#3b82f6',
     fontFamily: 'Pretendard',
-    logoText: 'Brand'
+    logoText: 'Brand',
+    churchName: '은전체일교회'
   }
 })
 
@@ -326,6 +327,18 @@ export const useSiteStore = defineStore('site', {
       this.isDirty = true
     },
 
+    // 지도 콘텐츠 업데이트
+    updateMap(content: MapContent) {
+      this.content.map = content
+      this.isDirty = true
+    },
+
+    // 푸터 콘텐츠 업데이트
+    updateFooter(content: FooterContent) {
+      this.content.footer = content
+      this.isDirty = true
+    },
+
     // 섹션 콘텐츠 업데이트
     updateSectionContent<K extends keyof SiteContent>(
       sectionKey: K,
@@ -333,8 +346,8 @@ export const useSiteStore = defineStore('site', {
     ) {
       if (this.content[sectionKey]) {
         this.content[sectionKey] = {
-          ...this.content[sectionKey],
-          ...content
+          ...(this.content[sectionKey] as object),
+          ...(content as object)
         } as SiteContent[K]
         this.isDirty = true
       }

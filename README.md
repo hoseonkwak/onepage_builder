@@ -1,6 +1,6 @@
 # 원페이지 템플릿 빌더
 
-교회 홈페이지 전용 원페이지(One-Page) 템플릿 빌더입니다. 섹션 단위로 콘텐츠/이미지/색상/스타일을 편집해 랜딩페이지를 완성할 수 있습니다.
+교회 홈페이지 전용 원페이지(One-Page) 템플릿 빌더. 섹션 단위로 콘텐츠/이미지/색상/스타일을 편집해 랜딩페이지를 완성할 수 있습니다.
 
 ## 기술 스택
 
@@ -24,10 +24,10 @@ npm run build    # 프로덕션 빌드
 
 ## 주요 기능
 
-### 전역
-- 메인 컬러 선택 (HSL 기반 팔레트 자동 생성, 50~900 단계)
-- 섹션 On/Off 토글 + 드래그앤드롭 순서 변경
-- 섹션별 배경색 설정 (프리셋 3종 + 커스텀, 헤더/히어로 제외)
+### 전역 설정
+- 교회 이름 입력 (푸터 copyright에 자동 반영)
+- 메인 컬러 선택 (HSL 팔레트 자동 생성)
+- 섹션별 배경색 설정 (프리셋 + 커스텀)
 
 ### 섹션별 편집
 
@@ -41,8 +41,8 @@ npm run build    # 프로덕션 빌드
 | 새가족안내 | STEP 카드(라벨/제목/부제목/설명/버튼 색) |
 | 교회학교 | 좌 텍스트+우 이미지 카드(이미지 업로드/버튼 커스텀) |
 | 갤러리 | 이미지 다중 업로드, 그리드+모달 뷰어 |
-| 지도 | 주소/전화/embed URL |
-| 푸터 | 저작권, 링크, 소셜 |
+| 지도 | 주소 입력 → Google Maps embed 자동 |
+| 푸터 | 주소, 소셜 아이콘(테마·커스텀) |
 
 ### 공통
 - **IconPicker** — 100+개 MDI 아이콘, 7개 카테고리, 검색
@@ -54,13 +54,17 @@ npm run build    # 프로덕션 빌드
 
 ```
 onepage_builder/
+├── CLAUDE.md                     # Claude Code 가이드 (상세)
+├── DESIGN.md                     # 설계 문서
+├── PROGRESS.md                   # 개발 진행 상황
+│
 ├── assets/css/main.css           # 글로벌 CSS 변수 + 공통 스타일
 ├── components/
 │   ├── sections/                 # 섹션 10종 (Header~Footer)
-│   └── editors/                  # 편집기 + IconPicker
+│   └── editors/                  # 편집기 10종 + IconPicker
 ├── composables/useThemeColor.ts  # 테마 팔레트 생성
 ├── layouts/                      # default, admin
-├── pages/                        # index (에디터), preview (미리보기)
+├── pages/                        # index (에디터), preview
 ├── stores/site.ts                # Pinia 상태관리
 └── types/site.ts                 # TypeScript 타입
 ```

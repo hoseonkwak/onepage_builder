@@ -1,36 +1,16 @@
 <template>
-  <section :id="id" class="section map-sec">
-    <div class="container-custom">
-      <div class="section-header">
-        <h2 class="section-title">{{ content.title }}</h2>
-        <div v-if="content.showDivider" class="section-divider"></div>
-        <p v-if="content.subtitle" class="section-subtitle">{{ content.subtitle }}</p>
-      </div>
-
-      <div class="map-sec__info">
-        <div v-if="content.address" class="map-sec__row">
-          <Icon name="mdi:map-marker" class="icon-24 map-sec__icon" />
-          <span>{{ content.address }}</span>
-        </div>
-        <div v-if="content.phone" class="map-sec__row">
-          <Icon name="mdi:phone" class="icon-24 map-sec__icon" />
-          <a :href="`tel:${content.phone}`">{{ content.phone }}</a>
-        </div>
-      </div>
-
-      <div class="map-sec__frame" :style="{ height: `${content.height}px` }">
-        <iframe
-          v-if="content.embedUrl"
-          :src="content.embedUrl"
-          class="map-sec__iframe"
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-        ></iframe>
-        <div v-else class="map-sec__placeholder">
-          <Icon name="mdi:map" class="icon-48 color-gray-300" />
-          <p>지도 embed URL을 설정해주세요</p>
-        </div>
-      </div>
+  <section :id="id" class="map-sec" :style="{ height: `${content.height}px` }">
+    <iframe
+      v-if="content.address"
+      :src="embedUrl"
+      class="map-sec__iframe"
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+      allowfullscreen
+    ></iframe>
+    <div v-else class="map-sec__placeholder">
+      <Icon name="mdi:map" class="icon-48" />
+      <p>주소를 입력해주세요</p>
     </div>
   </section>
 </template>
@@ -43,36 +23,19 @@ interface Props {
   content: MapContent
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
+
+const embedUrl = computed(() => {
+  const q = encodeURIComponent(props.content.address || '')
+  return `https://maps.google.com/maps?q=${q}&output=embed`
+})
 </script>
 
 <style scoped>
-.map-sec__info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  margin-bottom: 2rem;
-  padding: 1.5rem;
-  background-color: var(--gray-50);
-  border-radius: var(--radius-lg);
-}
-
-.map-sec__row {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  color: var(--gray-700);
-}
-
-.map-sec__icon {
-  color: var(--primary-500);
-  flex-shrink: 0;
-}
-
-.map-sec__frame {
-  border-radius: var(--radius-lg);
+.map-sec {
+  width: 100%;
+  position: relative;
   overflow: hidden;
-  background-color: var(--gray-100);
 }
 
 .map-sec__iframe {
@@ -87,11 +50,10 @@ defineProps<Props>()
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: var(--gray-500);
   gap: 0.5rem;
+  background-color: var(--gray-100);
+  color: var(--gray-400);
 }
 
-.icon-24 { width: 1.5rem; height: 1.5rem; }
 .icon-48 { width: 3rem; height: 3rem; }
-.color-gray-300 { color: var(--gray-300); }
 </style>

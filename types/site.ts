@@ -30,6 +30,7 @@ export interface GlobalSettings {
   fontFamily: string
   logoImage?: string
   logoText: string
+  churchName: string
   faviconImage?: string
 }
 
@@ -201,19 +202,16 @@ export interface GalleryContent {
 
 // 지도
 export interface MapContent {
-  title: string
-  subtitle?: string
-  showDivider: boolean
   address: string
-  phone?: string
-  embedUrl?: string
   height: number
 }
 
 // 푸터
 export interface FooterContent {
-  copyright: string
-  links?: { label: string; href: string }[]
+  address: string
+  socialUseTheme: boolean
+  socialBgColor: string
+  socialIconColor: string
   social?: SocialLink[]
 }
 

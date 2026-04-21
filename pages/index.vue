@@ -70,6 +70,20 @@
         <!-- Left Panel: Section List -->
         <aside class="editor-sidebar">
           <div class="editor-sidebar__inner">
+            <!-- 교회 이름 -->
+            <div class="church-name-setting">
+              <h2 class="editor-sidebar__title">교회 이름</h2>
+              <input
+                :value="siteStore.content.settings.churchName"
+                type="text"
+                class="editor-input church-name-setting__input"
+                placeholder="교회 이름"
+                @input="onChurchNameChange"
+              />
+            </div>
+
+            <div class="editor-sidebar__divider" />
+
             <!-- 메인 컬러 설정 -->
             <div class="color-setting">
               <h2 class="editor-sidebar__title">메인 컬러</h2>
@@ -284,6 +298,18 @@
                 @update="updateGalleryContent"
               />
 
+              <MapEditor
+                v-else-if="selectedSection === 'map'"
+                :content="siteStore.content.map"
+                @update="updateMapContent"
+              />
+
+              <FooterEditor
+                v-else-if="selectedSection === 'footer'"
+                :content="siteStore.content.footer"
+                @update="updateFooterContent"
+              />
+
               <p v-else class="editor-panel__placeholder">
                 편집 패널이 여기에 표시됩니다.
               </p>
@@ -304,7 +330,7 @@
 <script setup lang="ts">
 import { VueDraggable } from 'vue-draggable-plus'
 import { useSiteStore, type BuilderTemplateType } from '~/stores/site'
-import type { SectionType, SectionConfig, HeaderContent, HeroContent, ChurchIntroContent, WorshipInfoContent, BoardContent, NewFamilyInfoContent, YouthContent, GalleryContent } from '~/types/site'
+import type { SectionType, SectionConfig, HeaderContent, HeroContent, ChurchIntroContent, WorshipInfoContent, BoardContent, NewFamilyInfoContent, YouthContent, GalleryContent, MapContent, FooterContent } from '~/types/site'
 import { useThemeColor } from '~/composables/useThemeColor'
 
 // Section Components
@@ -328,6 +354,8 @@ import BoardEditor from '~/components/editors/BoardEditor.vue'
 import NewFamilyInfoEditor from '~/components/editors/NewFamilyInfoEditor.vue'
 import YouthEditor from '~/components/editors/YouthEditor.vue'
 import GalleryEditor from '~/components/editors/GalleryEditor.vue'
+import MapEditor from '~/components/editors/MapEditor.vue'
+import FooterEditor from '~/components/editors/FooterEditor.vue'
 
 definePageMeta({
   layout: false
@@ -519,6 +547,18 @@ const updateYouthContent = (content: YouthContent) => {
 const updateGalleryContent = (content: GalleryContent) => {
   siteStore.updateGallery(content)
 }
+
+const updateMapContent = (content: MapContent) => {
+  siteStore.updateMap(content)
+}
+
+const updateFooterContent = (content: FooterContent) => {
+  siteStore.updateFooter(content)
+}
+
+const onChurchNameChange = (e: Event) => {
+  siteStore.updateSettings({ churchName: (e.target as HTMLInputElement).value })
+}
 </script>
 
 <style scoped>
@@ -682,6 +722,15 @@ const updateGalleryContent = (content: GalleryContent) => {
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--gray-600);
+}
+
+/* Church Name Setting */
+.church-name-setting {
+  margin-bottom: 0.5rem;
+}
+
+.church-name-setting__input {
+  margin-top: 0.5rem;
 }
 
 /* Color Setting */
