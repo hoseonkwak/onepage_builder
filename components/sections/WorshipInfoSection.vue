@@ -69,8 +69,8 @@ const formatDesc = (text: string) => {
 }
 
 .worship__icon {
-  width: 3rem;
-  height: 3rem;
+  width: 4.5rem;
+  height: 4.5rem;
   border-radius: var(--radius-full);
   display: flex;
   align-items: center;

@@ -56,24 +56,6 @@
             </button>
           </div>
         </div>
-        <div>
-          <label class="editor-label">배경색</label>
-          <div class="color-field">
-            <input
-              :value="localContent.bgColor"
-              type="color"
-              class="color-picker"
-              @input="(e) => { localContent.bgColor = getVal(e); emitUpdate() }"
-            />
-            <input
-              :value="localContent.bgColor"
-              type="text"
-              class="editor-input"
-              placeholder="#f3f4f6"
-              @input="(e) => { localContent.bgColor = getVal(e); emitUpdate() }"
-            />
-          </div>
-        </div>
       </div>
     </div>
 

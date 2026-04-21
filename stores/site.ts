@@ -117,7 +117,6 @@ const getDefaultContent = (): SiteContent => ({
     iconUseTheme: false,
     iconBgColor: 'transparent',
     iconColor: '#1f2937',
-    bgColor: '#f3f4f6',
     showDivider: true
   },
   board: {

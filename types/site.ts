@@ -112,7 +112,6 @@ export interface WorshipInfoContent {
   iconUseTheme: boolean
   iconBgColor: string
   iconColor: string
-  bgColor: string
   showDivider: boolean
 }
 
